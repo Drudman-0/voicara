@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Donate | She Rises SA</title>
+
+<link rel="stylesheet"
+href="style.css">
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+rel="stylesheet">
+
+<script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+
+<body>
+
+
+<header class="navbar">
+
+<a href="index.html"
+class="logo">
+
+<span class="logo-icon">S</span>
+
+<span>
+She Rises <strong>SA</strong>
+</span>
+
+</a>
+
+
+<nav class="nav-links">
+
+<a href="index.html">
+Home
+</a>
+
+<a href="stories.html">
+Stories
+</a>
+
+<a href="support.html">
+Get Support
+</a>
+
+<a href="about.html">
+About Us
+</a>
+
+</nav>
+
+
+<div class="nav-actions">
+
+<a href="share-stories.html"
+class="btn btn-outline">
+Share Your Story
+</a>
+
+<a href="donate.html"
+class="btn btn-primary">
+Donate
+</a>
+
+</div>
+
+</header>
+
+
+<section class="donate-hero">
+
+<div>
+
+<span class="section-label">
+SUPPORT HER FUTURE
+</span>
+
+<h1>
+Your generosity<br>
+can help a woman<br>
+<span>move forward.</span>
+</h1>
+
+<p>
+Donations will help us build programmes and partnerships
+designed to support women who are facing difficult
+circumstances.
+</p>
+
+</div>
+
+
+<div class="donation-card">
+
+<h2>
+Make a donation
+</h2>
+
+<p>
+Choose an amount to support the movement.
+</p>
+
+
+<div class="amount-grid">
+
+<button>R50</button>
+
+<button>R100</button>
+
+<button>R250</button>
+
+<button>R500</button>
+
+</div>
+
+
+<div class="custom-amount">
+
+<label>
+Other amount
+</label>
+
+<div class="amount-input">
+
+<span>R</span>
+
+<input
+type="number"
+placeholder="0"
+min="1">
+
+</div>
+
+</div>
+
+
+<button
+class="btn btn-primary btn-large donation-button"
+id="donateButton">
+
+Continue to secure donation
+
+<i data-lucide="arrow-right"></i>
+
+</button>
+
+
+<p class="secure-message">
+
+<i data-lucide="lock"></i>
+
+Secure payment processing will be connected
+in the next development stage.
+
+</p>
+
+</div>
+
+</section>
+
+
+<section class="donate-message">
+
+<span class="section-label">
+WHY DONATE?
+</span>
+
+<h2>
+Small acts of support can help build
+stronger communities.
+</h2>
+
+<div class="donate-grid">
+
+
+<div>
+
+<i data-lucide="heart"></i>
+
+<h3>
+Support
+</h3>
+
+<p>
+Help create resources for women who need support.
+</p>
+
+</div>
+
+
+<div>
+
+<i data-lucide="users"></i>
+
+<h3>
+Community
+</h3>
+
+<p>
+Help strengthen community-based support initiatives.
+</p>
+
+</div>
+
+
+<div>
+
+<i data-lucide="megaphone"></i>
+
+<h3>
+Awareness
+</h3>
+
+<p>
+Help promote conversations about preventing GBV.
+</p>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<footer>
+
+<div class="footer-bottom">
+
+<span>
+© 2026 She Rises SA
+</span>
+
+<span>
+Stand together. Support her.
+</span>
+
+</div>
+
+</footer>
+
+
+<script>
+
+lucide.createIcons();
+
+const buttons =
+document.querySelectorAll(".amount-grid button");
+
+buttons.forEach(button => {
+
+button.addEventListener("click", () => {
+
+buttons.forEach(b =>
+b.classList.remove("selected"));
+
+button.classList.add("selected");
+
+});
+
+});
+
+
+document
+.getElementById("donateButton")
+.addEventListener("click", () => {
+
+alert(
+"The secure payment system will be connected next."
+);
+
+});
+
+</script>
+
+
+</body>
+</html>

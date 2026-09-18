@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Share-Story | She Rises SA</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+          rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+<body>
+
+
+<header class="navbar">
+
+    <a href="index.html" class="logo">
+        <span class="logo-icon">S</span>
+        <span>She Rises <strong>SA</strong></span>
+    </a>
+
+    <nav class="nav-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="stories.html">Stories</a>
+
+        <a href="support.html">Get Support</a>
+
+        <a href="about.html">About Us</a>
+
+    </nav>
+
+    <div class="nav-actions">
+
+        <a href="share-stories.html"
+           class="btn btn-outline">
+            Share Your Story
+        </a>
+
+        <a href="donate.html"
+           class="btn btn-primary">
+            Donate
+        </a>
+
+    </div>
+
+</header>
+
+
+<section class="page-hero">
+
+    <span class="section-label">
+        YOUR VOICE MATTERS
+    </span>
+
+    <h1>
+        Share your<br>
+        <span>story.</span>
+    </h1>
+
+    <p>
+        If you feel ready to share your experience,
+        your story may help another woman realise
+        that she is not alone.
+    </p>
+
+</section>
+
+
+<section class="form-section">
+
+    <div class="form-container">
+
+        <div class="form-header">
+
+            <i data-lucide="heart-handshake"></i>
+
+            <h2>
+                Tell us your story
+            </h2>
+
+            <p>
+                You decide how much information you want to share.
+                You can remain anonymous.
+            </p>
+
+        </div>
+
+
+        <form id="storyForm">
+
+
+            <div class="form-group">
+
+                <label>
+                    How would you like to be identified?
+                </label>
+
+                <select id="identity">
+
+                    <option value="anonymous">
+                        Keep me anonymous
+                    </option>
+
+                    <option value="name">
+                        Use my first name
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    First name <span>(optional)</span>
+                </label>
+
+                <input
+                    type="text"
+                    placeholder="Your first name"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Your province
+                </label>
+
+                <select>
+
+                    <option>Select province</option>
+
+                    <option>Eastern Cape</option>
+                    <option>Free State</option>
+                    <option>Gauteng</option>
+                    <option>KwaZulu-Natal</option>
+                    <option>Limpopo</option>
+                    <option>Mpumalanga</option>
+                    <option>North West</option>
+                    <option>Northern Cape</option>
+                    <option>Western Cape</option>
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Your story
+                </label>
+
+                <textarea
+                    rows="8"
+                    placeholder="Share only what you feel comfortable sharing..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="upload-box">
+
+                <i data-lucide="video"></i>
+
+                <h3>
+                    Upload a video
+                </h3>
+
+                <p>
+                    You will be able to upload your video here.
+                    Video submissions will be reviewed before
+                    being published.
+                </p>
+
+                <input
+                    type="file"
+                    accept="video/*"
+                >
+
+            </div>
+
+
+            <div class="privacy-box">
+
+                <i data-lucide="shield-check"></i>
+
+                <p>
+                    <strong>Your safety comes first.</strong><br>
+                    Do not include your home address, phone number,
+                    workplace address or other information that could
+                    put you at risk.
+                </p>
+
+            </div>
+
+
+            <label class="checkbox-label">
+
+                <input type="checkbox">
+
+                <span>
+                    I understand that my submission will be reviewed
+                    before it can appear publicly on the website.
+                </span>
+
+            </label>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary btn-large submit-button">
+
+                Submit My Story
+
+                <i data-lucide="send"></i>
+
+            </button>
+
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<footer>
+
+    <div class="footer-bottom">
+
+        <span>
+            © 2026 She Rises SA
+        </span>
+
+        <span>
+            Your voice matters.
+        </span>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+    lucide.createIcons();
+
+    document
+        .getElementById("storyForm")
+        .addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            alert(
+                "Thank you for trusting She Rises SA with your story. " +
+                "The submission system will be connected to the secure " +
+                "database in the next development stage."
+            );
+
+        });
+
+</script>
+
+</body>
+</html>
