@@ -7,15 +7,12 @@
 // Mobile navigation
 
 const mobileMenu = document.getElementById("mobileMenu");
+const navLinks = document.querySelector(".nav-links");
 
-if (mobileMenu) {
-
+if (mobileMenu && navLinks) {
     mobileMenu.addEventListener("click", function () {
-
-        alert("Mobile navigation will be added in the next version.");
-
+        navLinks.classList.toggle("mobile-open");
     });
-
 }
 
 

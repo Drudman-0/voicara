@@ -2443,3 +2443,48 @@ footer {
         height: 380px;
     }
 }
+
+/* ================= MOBILE NAVIGATION ================= */
+
+@media (max-width: 768px) {
+
+    .mobile-menu {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .nav-links.mobile-open {
+        display: flex;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0;
+        padding: 20px;
+        background: var(--white);
+        border-top: 1px solid var(--border);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        z-index: 1000;
+    }
+
+    .nav-links.mobile-open a {
+        width: 100%;
+        padding: 15px 10px;
+        text-align: center;
+    }
+
+    .nav-links.mobile-open a:hover {
+        background: var(--rose-light);
+    }
+}
+
+.navbar {
+    position: relative;/
+}
