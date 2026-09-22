@@ -1,5 +1,5 @@
 /* =========================================
-    SHE RISES SA
+   HER VOICE SA
    MAIN WEBSITE STYLES
 ========================================= */
 
@@ -13,7 +13,7 @@
     --dark: #241c24;
     --dark-soft: #3a3039;
     --rose: #a94868;
-    --rose-dark: #a133bd;
+    --rose-dark: #873b56;
     --rose-light: #f8e8ed;
     --cream: #fffaf7;
     --white: #ffffff;
@@ -178,7 +178,6 @@ button {
     cursor: pointer;
 }
 
-@media (max-width: 650px)
 
 /* =========================================
    HERO
@@ -299,8 +298,8 @@ button {
     background:
         linear-gradient(
             135deg,
-            #d177c5,
-            #a648a9
+            #e9a6b9,
+            #a94868
         );
 
     position: relative;
