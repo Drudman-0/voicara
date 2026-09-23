@@ -52,11 +52,3 @@ cards.forEach(card => {
     observer.observe(card);
 
 });
-
-if (password === "12345") {
-    // login
-}
-
-const SUPABASE_URL = "https://upntuixdqaisaixzilqk.supabase.co";
-
-const SUPABASE_ANON_KEY = "sb_publishable_bAUFzae-MUlky5TIYhpk9g_4bV9TdvT";s
