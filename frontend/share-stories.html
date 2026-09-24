@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Share Your Story | VOICARA SA</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <a href="index.html" class="logo">
+
+        <span class="logo-icon">V</span>
+
+        <span>
+            VOICARA <strong>SA</strong>
+        </span>
+
+    </a>
+
+    <nav class="nav-links">
+
+        <a href="index.html">Home</a>
+
+        <a href="stories.html">Stories</a>
+
+        <a href="support.html">Get Support</a>
+
+        <a href="about.html">About Us</a>
+
+    </nav>
+
+    <div class="nav-actions">
+
+        <a
+            href="share-stories.html"
+            class="btn btn-outline"
+        >
+            Share Your Story
+        </a>
+
+        <a
+            href="donate.html"
+            class="btn btn-primary"
+        >
+            Donate
+        </a>
+
+    </div>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="page-hero">
+
+    <span class="section-label">
+        YOUR VOICE MATTERS
+    </span>
+
+    <h1>
+        Share your<br>
+        <span>story.</span>
+    </h1>
+
+    <p>
+        If you feel ready to share your experience,
+        your story may help another woman realise
+        that she is not alone.
+    </p>
+
+</section>
+
+
+<!-- FORM -->
+
+<section class="form-section">
+
+    <div class="form-container">
+
+        <div class="form-header">
+
+            <i data-lucide="heart-handshake"></i>
+
+            <h2>
+                Tell us your story
+            </h2>
+
+            <p>
+                You decide how much information you want to share.
+                You can remain anonymous.
+            </p>
+
+        </div>
+
+
+        <form id="storyForm">
+
+
+            <!-- IDENTITY -->
+
+            <div class="form-group">
+
+                <label for="identity">
+                    How would you like to be identified?
+                </label>
+
+                <select id="identity">
+
+                    <option value="anonymous">
+                        Keep me anonymous
+                    </option>
+
+                    <option value="name">
+                        Use my first name
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- NAME -->
+
+            <div class="form-group">
+
+                <label for="name">
+                    First name <span>(optional)</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="Your first name"
+                >
+
+            </div>
+
+
+            <!-- PROVINCE -->
+
+            <div class="form-group">
+
+                <label for="province">
+                    Your province
+                </label>
+
+                <select id="province">
+
+                    <option value="">
+                        Select province
+                    </option>
+
+                    <option value="Eastern Cape">
+                        Eastern Cape
+                    </option>
+
+                    <option value="Free State">
+                        Free State
+                    </option>
+
+                    <option value="Gauteng">
+                        Gauteng
+                    </option>
+
+                    <option value="KwaZulu-Natal">
+                        KwaZulu-Natal
+                    </option>
+
+                    <option value="Limpopo">
+                        Limpopo
+                    </option>
+
+                    <option value="Mpumalanga">
+                        Mpumalanga
+                    </option>
+
+                    <option value="North West">
+                        North West
+                    </option>
+
+                    <option value="Northern Cape">
+                        Northern Cape
+                    </option>
+
+                    <option value="Western Cape">
+                        Western Cape
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- STORY -->
+
+            <div class="form-group">
+
+                <label for="story">
+                    Your story
+                </label>
+
+                <textarea
+                    id="story"
+                    rows="8"
+                    placeholder="Share only what you feel comfortable sharing..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- VIDEO -->
+
+            <div class="upload-box">
+
+                <i data-lucide="video"></i>
+
+                <h3>
+                    Upload a video
+                </h3>
+
+                <p>
+                    You can upload a video of your story.
+                    Every submission will be reviewed before
+                    being published.
+                </p>
+
+                <div class="form-group">
+
+                    <label for="video">
+                        Choose your video
+                    </label>
+
+                    <input
+                        type="file"
+                        id="video"
+                        name="video"
+                        accept="video/mp4,video/webm,video/quicktime"
+                    >
+
+                    <small>
+                        MP4, WebM or MOV • Maximum 50 MB
+            
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRIVACY -->
+
+            <div class="privacy-box">
+
+                <i data-lucide="shield-check"></i>
+
+                <p>
+
+                    <strong>
+                        Your safety comes first.
+                    </strong>
+
+                    <br>
+
+                    Do not include your home address,
+                    phone number, workplace address or
+                    other information that could put you
+                    at risk.
+
+                </p>
+
+            </div>
+
+
+            <!-- REVIEW AGREEMENT -->
+
+            <label class="checkbox-label">
+
+                <input
+                    type="checkbox"
+                    id="reviewConsent"
+                    required
+                >
+
+                <span>
+                    I understand that my submission will be
+                    reviewed before it can appear publicly
+                    on the website.
+                </span>
+
+            </label>
+
+
+            <!-- SUBMIT -->
+
+            <button
+                type="submit"
+                class="btn btn-primary btn-large submit-button"
+                id="submitButton"
+            >
+
+                Submit My Story
+
+                <i data-lucide="send"></i>
+
+            </button>
+
+
+            <!-- STATUS -->
+
+            <p
+                id="uploadStatus"
+                style="margin-top:20px;text-align:center;"
+            ></p>
+
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    <div class="footer-bottom">
+
+        <span>
+            © 2026 VOICARA SA
+        </span>
+
+        <span>
+            Your voice matters.
+        </span>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+    lucide.createIcons();
+
+
+    const storyForm =
+        document.getElementById("storyForm");
+
+    const submitButton =
+        document.getElementById("submitButton");
+
+    const uploadStatus =
+        document.getElementById("uploadStatus");
+
+
+    storyForm.addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document.getElementById("name").value.trim();
+
+            const province =
+                document.getElementById("province").value;
+
+            const story =
+                document.getElementById("story").value.trim();
+
+            const identity =
+                document.getElementById("identity").value;
+
+            const reviewConsent =
+                document.getElementById("reviewConsent").checked;
+
+            const video =
+                document.getElementById("video").files[0];
+
+
+            const anonymous =
+                identity === "anonymous";
+
+
+            if (!story) {
+
+                alert(
+                    "Please share your story before submitting."
+                );
+
+                return;
+            }
+
+
+            if (!reviewConsent) {
+
+                alert(
+                    "Please confirm that you understand your submission will be reviewed."
+                );
+
+                return;
+            }
+
+
+            if (video) {
+
+                const maxSize =
+                    100 * 1024 * 1024;
+
+                if (video.size > maxSize) {
+
+                    alert(
+                        "Your video is larger than 100 MB."
+                    );
+
+                    return;
+                }
+
+
+                const allowedTypes = [
+
+                    "video/mp4",
+
+                    "video/webm",
+
+                    "video/quicktime"
+
+                ];
+
+
+                if (!allowedTypes.includes(video.type)) {
+
+                    alert(
+                        "Please upload an MP4, WebM or MOV video."
+                    );
+
+                    return;
+                }
+
+            }
+
+
+            submitButton.disabled = true;
+
+            uploadStatus.textContent =
+                "Submitting your story...";
+
+
+            try {
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "name",
+                    anonymous ? "" : name
+                );
+
+
+                formData.append(
+                    "province",
+                    province
+                );
+
+
+                formData.append(
+                    "story",
+                    story
+                );
+
+
+                formData.append(
+                    "anonymous",
+                    anonymous
+                );
+
+
+                if (video) {
+
+                    formData.append(
+                        "video",
+                        video
+                    );
+
+                }
+
+
+                const response =
+                    await fetch(
+                        "http://localhost:5000/api/stories",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.message ||
+                        "Unable to submit story."
+                    );
+
+                }
+
+
+                uploadStatus.textContent =
+                    "Thank you. Your story has been safely submitted for review.";
+
+
+                storyForm.reset();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                uploadStatus.textContent =
+                    "We could not submit your story. Please try again.";
+
+            } finally {
+
+                submitButton.disabled = false;
+
+            }
+
+        }
+
+    );
+
+</script>
+
+</body>
+
+</html>
