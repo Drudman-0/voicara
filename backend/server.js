@@ -9,6 +9,7 @@ const { createClient } = require("@supabase/supabase-js");
 dotenv.config();
 
 const app = express();
+
 const PORT = process.env.PORT || 5000;
 
 // ===============================
@@ -17,7 +18,7 @@ const PORT = process.env.PORT || 5000;
 
 const supabase = createClient(
     process.env.SUPABASE_URL,
-    process.env.SUPABASE_SECRET_KEY
+    process.env.SUPABASE_KEY
 );
 
 // ===============================
