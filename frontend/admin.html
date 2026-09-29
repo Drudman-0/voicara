@@ -285,515 +285,490 @@
 
     <script>
 
-        const API_URL =
-            "https://voicara-backend.onrender.com";
+    const API_URL =
+        "https://voicara-backend.onrender.com";
+
+    let adminKey = "";
+    let allStories = [];
+    let currentFilter = "all";
 
 
-        let adminKey = "";
-        let allStories = [];
-        let currentFilter = "all";
+    // ===============================
+    // ADMIN LOGIN
+    // ===============================
+
+    function loginAdmin() {
+
+        const keyInput =
+            document.getElementById("adminKey");
+
+        const message =
+            document.getElementById("loginMessage");
+
+        adminKey =
+            keyInput.value.trim();
+
+        if (!adminKey) {
+
+            message.textContent =
+                "Please enter the admin key.";
+
+            return;
+        }
+
+        document.getElementById(
+            "adminLogin"
+        ).style.display = "none";
+
+        document.getElementById(
+            "adminDashboard"
+        ).style.display = "block";
+
+        loadStories();
+    }
 
 
+    // ===============================
+    // LOAD STORIES
+    // ===============================
 
-        // ===============================
-        // ADMIN LOGIN
-        // ===============================
+    async function loadStories() {
 
-        function loginAdmin() {
+        const container =
+            document.getElementById(
+                "storiesContainer"
+            );
 
-            const keyInput =
-                document.getElementById("adminKey");
+        container.innerHTML =
+            "<p>Loading stories...</p>";
 
+        try {
 
-            const message =
-                document.getElementById("loginMessage");
+            const response =
+                await fetch(
+                    `${API_URL}/api/admin/stories`,
+                    {
+                        headers: {
+                            "x-admin-key":
+                                adminKey
+                        }
+                    }
+                );
 
+            const result =
+                await response.json();
 
-            adminKey =
-                keyInput.value.trim();
+            if (!response.ok) {
 
-
-            if (!adminKey) {
-
-                message.textContent =
-                    "Please enter the admin key.";
-
-                return;
-
+                throw new Error(
+                    result.message ||
+                    "Unable to load stories."
+                );
             }
 
 
+            // Save all stories
+
+            allStories =
+                result.stories;
+
+
+            // Update statistics
+
             document.getElementById(
-                "adminLogin"
-            ).style.display = "none";
-
+                "pendingCount"
+            ).textContent =
+                result.counts.pending;
 
             document.getElementById(
-                "adminDashboard"
-            ).style.display = "block";
+                "publishedCount"
+            ).textContent =
+                result.counts.published;
+
+            document.getElementById(
+                "rejectedCount"
+            ).textContent =
+                result.counts.rejected;
 
 
-            loadStories();
+            // Display current filter
+
+            displayStories();
 
         }
 
+        catch (error) {
+
+            console.error(error);
+
+            container.innerHTML = `
+
+                <div class="admin-card">
+
+                    <h3>
+                        Unable to load stories
+                    </h3>
+
+                    <p>
+                        ${error.message}
+                    </p>
+
+                </div>
+
+            `;
+        }
+    }
 
 
-        // ===============================
-        // LOAD STORIES
-        // ===============================
+    // ===============================
+    // DISPLAY STORIES
+    // ===============================
 
-        async function loadStories() {
+    function displayStories() {
 
-            const container =
-                document.getElementById(
-                    "storiesContainer"
+        const container =
+            document.getElementById(
+                "storiesContainer"
+            );
+
+        const filteredStories =
+            currentFilter === "all"
+                ? allStories
+                : allStories.filter(
+                    story =>
+                        story.status ===
+                        currentFilter
                 );
 
 
-            container.innerHTML =
-                "<p>Loading stories...</p>";
+        // No stories in selected category
 
+        if (
+            filteredStories.length === 0
+        ) {
 
-            try {
-
-                const response =
-                    await fetch(
-                        `${API_URL}/api/admin/stories`,
-                        {
-                            headers: {
-                                "x-admin-key":
-                                    adminKey
-                            }
-                        }
-                    );
-
-
-                const result =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        result.message ||
-                        "Unable to load stories."
-                    );
-
-                }
-
-
-
-                // Update statistics
-
-                document.getElementById(
-                    "pendingCount"
-                ).textContent =
-                    result.counts.pending;
-
-
-                document.getElementById(
-                    "publishedCount"
-                ).textContent =
-                    result.counts.published;
-
-
-                document.getElementById(
-                    "rejectedCount"
-                ).textContent =
-                    result.counts.rejected;
-
-
-
-                // No stories
-
-                if (
-                    result.stories.length === 0
-                ) {
-
-                    container.innerHTML = `
-
-                        <div class="admin-card">
-
-                            <h3>
-                                No stories found
-                            </h3>
-
-                            <p>
-                                There are currently
-                                no submitted stories.
-                            </p>
-
-                        </div>
-
-                    `;
-
-                    return;
-
-                }
-
-
-
-                // Clear container
-
-                container.innerHTML = "";
-
-
-
-                // Display stories
-
-                allStories = result.stories;
-
-            const filteredStories =
+            const label =
                 currentFilter === "all"
-                    ? allStories
-                        : allStories.filter(
-                            story =>
-                            story.status === currentFilter
-    );
+                    ? "stories"
+                    : `${currentFilter} stories`;
 
-                filteredStories.forEach(
-                    story => {
+            container.innerHTML = `
 
+                <div class="admin-card">
 
-                        const card =
-                            document.createElement(
-                                "div"
-                            );
+                    <h3>
+                        No ${label} found
+                    </h3>
 
+                    <p>
+                        There are currently no
+                        ${label} in this category.
+                    </p>
 
-                        card.className =
-                            "admin-story-card";
+                </div>
 
+            `;
 
-
-                        const displayName =
-                            story.anonymous ||
-                            !story.name
-                                ? "ANONYMOUS"
-                                : story.name;
+            return;
+        }
 
 
+        // Clear container
 
-                        const location =
-                            story.province ||
-                            "South Africa";
-
+        container.innerHTML = "";
 
 
-                        card.innerHTML = `
+        // Create each story card
 
-                            <div
-                                class="admin-story-header"
+        filteredStories.forEach(
+            story => {
+
+                createStoryCard(
+                    story,
+                    container
+                );
+
+            }
+        );
+    }
+
+
+    // ===============================
+    // CREATE STORY CARD
+    // ===============================
+
+    function createStoryCard(
+        story,
+        container
+    ) {
+
+        const card =
+            document.createElement(
+                "div"
+            );
+
+        card.className =
+            "admin-story-card";
+
+
+        const displayName =
+            story.anonymous ||
+            !story.name
+                ? "ANONYMOUS"
+                : story.name;
+
+
+        const location =
+            story.province ||
+            "South Africa";
+
+
+        const submittedDate =
+            story.created_at
+                ? new Date(
+                    story.created_at
+                ).toLocaleString()
+                : "Date unavailable";
+
+
+        card.innerHTML = `
+
+            <div
+                class="admin-story-header"
+            >
+
+                <div>
+
+                    <span
+                        class="story-tag"
+                    >
+                        ${displayName}
+                    </span>
+
+                    <h3>
+                        ${location}
+                    </h3>
+
+                    <p
+                        class="story-date"
+                    >
+                        Submitted:
+                        ${submittedDate}
+                    </p>
+
+                </div>
+
+
+                <span
+                    class="status-badge ${story.status}"
+                >
+                    ${story.status}
+                </span>
+
+            </div>
+
+
+            <div
+                class="admin-story-content"
+            >
+
+                <p>
+                    ${story.story}
+                </p>
+
+            </div>
+
+
+            ${
+                story.video_url
+                    ? `
+                        <p>
+                            <strong>
+                                Video submitted
+                            </strong>
+                        </p>
+                    `
+                    : ""
+            }
+
+
+            <div
+                class="admin-actions"
+            >
+
+                ${
+                    story.status !==
+                    "published"
+                        ? `
+                            <button
+                                class="btn btn-primary"
+                                onclick="updateStory(
+                                    '${story.id}',
+                                    'published'
+                                )"
                             >
-
-                                <div>
-
-                                    <span
-                                        class="story-tag"
-                                    >
-                                        ${displayName}
-                                    </span>
+                                Publish
+                            </button>
+                        `
+                        : ""
+                }
 
 
-                                    <h3>
-                                        ${location}
-                                    </h3>
-                                    <p class="story-date">
-                                        Submitted:
-                                        ${new Date(story.created_at).toLocaleString()}
-                                    </p>
-
-                                </div>
-
-
-                                <span
-                                    class="status-badge ${story.status}"
-                                >
-                                    ${story.status}
-                                </span>
-
-                            </div>
-
-
-
-                            <div
-                                class="admin-story-content"
+                ${
+                    story.status !==
+                    "rejected"
+                        ? `
+                            <button
+                                class="btn btn-danger"
+                                onclick="updateStory(
+                                    '${story.id}',
+                                    'rejected'
+                                )"
                             >
+                                Reject
+                            </button>
+                        `
+                        : ""
+                }
 
-                                <p>
-                                    ${story.story}
-                                </p>
+            </div>
 
-                            </div>
-
-
-
-                            ${
-                                story.video_url
-                                ?
-                                `
-                                <p>
-                                    <strong>
-                                        Video submitted
-                                    </strong>
-                                </p>
-                                `
-                                :
-                                ""
-                            }
+        `;
 
 
-
-                            <div
-                                class="admin-actions"
-                            >
-
-
-                                ${
-                                    story.status !==
-                                    "published"
-
-                                    ?
-
-                                    `
-                                    <button
-                                        class="btn btn-primary"
-                                        onclick="updateStory(
-                                            '${story.id}',
-                                            'published'
-                                        )"
-                                    >
-                                        Publish
-                                    </button>
-                                    `
-
-                                    :
-
-                                    ""
-                                }
+        container.appendChild(
+            card
+        );
+    }
 
 
+    // ===============================
+    // FILTER STORIES
+    // ===============================
 
-                                ${
-                                    story.status !==
-                                    "rejected"
+    function filterStories(
+        filter,
+        button
+    ) {
 
-                                    ?
-
-                                    `
-                                    <button
-                                        class="btn btn-danger"
-                                        onclick="updateStory(
-                                            '${story.id}',
-                                            'rejected'
-                                        )"
-                                    >
-                                        Reject
-                                    </button>
-                                    `
-
-                                    :
-
-                                    ""
-                                }
+        currentFilter =
+            filter;
 
 
-                            </div>
+        // Remove active class
 
-                        `;
+        document
+            .querySelectorAll(
+                ".filter-btn"
+            )
+            .forEach(
+                btn => {
+                    btn.classList.remove(
+                        "active"
+                    );
+                }
+            );
 
 
-                        container.appendChild(
-                            card
-                        );
+        // Add active class
+
+        button.classList.add(
+            "active"
+        );
+
+
+        // Display filtered stories
+
+        displayStories();
+    }
+
+
+    // ===============================
+    // UPDATE STORY STATUS
+    // ===============================
+
+    async function updateStory(
+        id,
+        status
+    ) {
+
+        const confirmation =
+            confirm(
+                `Are you sure you want to ${status} this story?`
+            );
+
+
+        if (!confirmation) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/api/admin/stories/${id}`,
+                    {
+
+                        method:
+                            "PATCH",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json",
+
+                            "x-admin-key":
+                                adminKey
+
+                        },
+
+                        body:
+                            JSON.stringify({
+                                status:
+                                    status
+                            })
 
                     }
                 );
 
 
-            }
-
-            catch (error) {
-
-                console.error(error);
+            const result =
+                await response.json();
 
 
-                container.innerHTML = `
+            if (!response.ok) {
 
-                    <div class="admin-card">
-
-                        <h3>
-                            Unable to load stories
-                        </h3>
-
-                        <p>
-                            ${error.message}
-                        </p>
-
-                    </div>
-
-                `;
-
-            }
-
-        }
-
-
-
-        // ===============================
-        // UPDATE STORY STATUS
-        // ===============================
-
-        async function updateStory(
-            id,
-            status
-        ) {
-
-
-            const confirmation =
-                confirm(
-                    `Are you sure you want to ${status} this story?`
+                throw new Error(
+                    result.message ||
+                    "Unable to update story."
                 );
-
-
-            if (!confirmation) {
-
-                return;
-
             }
 
 
-
-            try {
-
-                const response =
-                    await fetch(
-                        `${API_URL}/api/admin/stories/${id}`,
-                        {
-
-                            method:
-                                "PATCH",
-
-                            headers: {
-
-                                "Content-Type":
-                                    "application/json",
-
-                                "x-admin-key":
-                                    adminKey
-
-                            },
-
-                            body:
-                                JSON.stringify({
-                                    status:
-                                        status
-                                })
-
-                        }
-                    );
-
-
-                const result =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        result.message ||
-                        "Unable to update story."
-                    );
-
-                }
-
-
-                alert(
-                    result.message
-                );
-
-
-                loadStories();
-
-            }
-
-
-            catch (error) {
-
-                console.error(error);
-
-
-                alert(
-                    error.message
-                );
-
-            }
-
-        }
-
-        function filterStories(
-    filter,
-    button
-) {
-
-    currentFilter = filter;
-
-    document
-        .querySelectorAll(".filter-btn")
-        .forEach(btn => {
-            btn.classList.remove("active");
-        });
-
-    button.classList.add("active");
-
-    const container =
-        document.getElementById(
-            "storiesContainer"
-        );
-
-    const filteredStories =
-        currentFilter === "all"
-            ? allStories
-            : allStories.filter(
-                story =>
-                    story.status ===
-                    currentFilter
+            alert(
+                result.message
             );
 
-    if (filteredStories.length === 0) {
 
-        container.innerHTML = `
-            <div class="admin-card">
-                <h3>
-                    No ${filter} stories
-                </h3>
+            // Reload stories
 
-                <p>
-                    There are currently no
-                    stories in this category.
-                </p>
-            </div>
-        `;
+            loadStories();
 
-        return;
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                error.message
+            );
+        }
     }
 
-    container.innerHTML = "";
+</script>
 
-    filteredStories.forEach(
-        story => {
-
-            createStoryCard(
-                story,
-                container
-            );
-
-        }
-    );
-}
-
-    </script>
 
 
 </body>
