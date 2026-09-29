@@ -191,6 +191,45 @@ app.post("/api/stories", upload.single("video"), async (req, res) => {
 });
 
 // ===============================
+// GET PUBLISHED STORIES
+// ===============================
+
+app.get("/api/stories", async (req, res) => {
+
+    try {
+
+        const { data, error } = await supabase
+            .from("stories")
+            .select("id, name, province, story, video_url, anonymous, created_at")
+            .eq("status", "published")
+            .order("created_at", { ascending: false });
+
+        if (error) {
+            console.error(error);
+
+            return res.status(500).json({
+                success: false,
+                message: "Unable to load stories."
+            });
+        }
+
+        res.json({
+            success: true,
+            stories: data
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            message: "Something went wrong while loading stories."
+        });
+    }
+});
+
+// ===============================
 // START SERVER
 // ===============================
 

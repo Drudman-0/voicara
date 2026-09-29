@@ -80,99 +80,13 @@
 
     </div>
 
+    <div class="story-grid" id="storyGrid">
 
-    <div class="story-grid">
-
-        <article class="story-card">
-
-            <div class="video-placeholder">
-                <i data-lucide="play-circle"></i>
-                <span>Video story</span>
-            </div>
-
-            <div class="story-info">
-
-                <span class="story-tag">ANONYMOUS</span>
-
-                <h3>
-                    Finding my voice again
-                </h3>
-
-                <p>
-                    A woman shares how finding support helped her
-                    begin rebuilding her confidence.
-                </p>
-
-                <span class="story-location">
-                    South Africa
-                </span>
-
-            </div>
-
-        </article>
-
-
-        <article class="story-card">
-
-            <div class="video-placeholder">
-                <i data-lucide="play-circle"></i>
-                <span>Video story</span>
-            </div>
-
-            <div class="story-info">
-
-                <span class="story-tag">ANONYMOUS</span>
-
-                <h3>
-                    I chose to speak
-                </h3>
-
-                <p>
-                    A story about courage, community and the
-                    decision to no longer suffer in silence.
-                </p>
-
-                <span class="story-location">
-                    South Africa
-                </span>
-
-            </div>
-
-        </article>
-
-
-        <article class="story-card">
-
-            <div class="video-placeholder">
-                <i data-lucide="play-circle"></i>
-                <span>Video story</span>
-            </div>
-
-            <div class="story-info">
-
-                <span class="story-tag">ANONYMOUS</span>
-
-                <h3>
-                    There is life after trauma
-                </h3>
-
-                <p>
-                    A reminder that a difficult chapter does not
-                    have to define someone's entire future.
-                </p>
-
-                <span class="story-location">
-                    South Africa
-                </span>
-
-            </div>
-
-        </article>
+        <p id="storiesLoading">Loading stories...</p>
 
     </div>
 
 </section>
-
 
 <section class="quote-section">
 
@@ -237,7 +151,94 @@
 <script src="main.js"></script>
 
 <script>
+
+    const API_URL = "https://voicara-backend.onrender.com";
+
+    async function loadStories() {
+
+        const storyGrid = document.getElementById("storyGrid");
+
+        try {
+
+            const response = await fetch(`${API_URL}/api/stories`);
+
+            const result = await response.json();
+
+            if (!result.success) {
+                throw new Error(result.message);
+            }
+
+            if (result.stories.length === 0) {
+
+                storyGrid.innerHTML = `
+                    <div class="no-stories">
+                        <h3>No stories have been published yet.</h3>
+                        <p>Be the first to share your voice.</p>
+                    </div>
+                `;
+
+                return;
+            }
+
+            storyGrid.innerHTML = "";
+
+            result.stories.forEach(story => {
+
+                const article = document.createElement("article");
+
+                article.className = "story-card";
+
+                const displayName =
+                    story.anonymous || !story.name
+                        ? "ANONYMOUS"
+                        : story.name;
+
+                const location =
+                    story.province || "South Africa";
+
+                article.innerHTML = `
+
+                    <div class="story-info">
+
+                        <span class="story-tag">
+                            ${displayName}
+                        </span>
+
+                        <p>
+                            ${story.story}
+                        </p>
+
+                        <span class="story-location">
+                            ${location}
+                        </span>
+
+                    </div>
+
+                `;
+
+                storyGrid.appendChild(article);
+
+            });
+
+            lucide.createIcons();
+
+        } catch (error) {
+
+            console.error("Error loading stories:", error);
+
+            storyGrid.innerHTML = `
+                <div class="no-stories">
+                    <h3>Stories are temporarily unavailable.</h3>
+                    <p>Please try again later.</p>
+                </div>
+            `;
+        }
+    }
+
+    loadStories();
+
     lucide.createIcons();
+
 </script>
 
 </body>
