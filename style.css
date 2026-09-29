@@ -2607,3 +2607,9 @@ footer {
     border: 1px solid #ccc;
     background: white;
 }
+
+.story-date {
+    margin-top: 5px;
+    font-size: 13px;
+    opacity: 0.7;
+}
