@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>VOICARA SA | Admin Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVIGATION -->
+
+    <header class="navbar">
+
+        <div class="nav-container">
+
+            <a
+                href="index.html"
+                class="logo"
+            >
+                VOICARA <span>SA</span>
+            </a>
+
+
+            <a
+                href="index.html"
+                class="btn btn-primary"
+            >
+                Back to Website
+            </a>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ADMIN PAGE -->
+
+    <main class="admin-page">
+
+
+        <!-- PAGE INTRO -->
+
+        <section class="page-hero">
+
+            <span class="section-label">
+                ADMINISTRATION
+            </span>
+
+
+            <h1>
+                Story Approval Dashboard
+            </h1>
+
+
+            <p>
+                Review stories submitted to VOICARA SA
+                before they are published.
+            </p>
+
+        </section>
+
+
+
+        <!-- ADMIN LOGIN -->
+
+        <section
+            id="adminLogin"
+            class="admin-login"
+        >
+
+            <div class="admin-card">
+
+                <h2>
+                    Admin Login
+                </h2>
+
+
+                <p>
+                    Enter your administrator key
+                    to access the dashboard.
+                </p>
+
+
+                <input
+                    type="password"
+                    id="adminKey"
+                    placeholder="Enter admin key"
+                >
+
+
+                <button
+                    class="btn btn-primary"
+                    onclick="loginAdmin()"
+                >
+                    Login
+                </button>
+
+
+                <p id="loginMessage"></p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ADMIN DASHBOARD -->
+
+        <section
+            id="adminDashboard"
+            class="admin-dashboard"
+            style="display: none;"
+        >
+
+
+            <!-- DASHBOARD HEADER -->
+
+            <div class="admin-header">
+
+                <div>
+
+                    <span class="section-label">
+                        STORY MANAGEMENT
+                    </span>
+
+
+                    <h2>
+                        Submitted Stories
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="loadStories()"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+
+
+            <!-- STATISTICS -->
+
+            <div class="admin-stats">
+
+
+                <div class="admin-stat">
+
+                    <span>
+                        Pending
+                    </span>
+
+
+                    <strong id="pendingCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="admin-stat">
+
+                    <span>
+                        Published
+                    </span>
+
+
+                    <strong id="publishedCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+
+                <div class="admin-stat">
+
+                    <span>
+                        Rejected
+                    </span>
+
+
+                    <strong id="rejectedCount">
+                        0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- STORIES -->
+
+            <div id="storiesContainer">
+
+                <p>
+                    Loading stories...
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- FOOTER -->
+
+    <footer class="footer">
+
+        <p>
+            © 2026 VOICARA SA. All rights reserved.
+        </p>
+
+    </footer>
+
+
+
+    <!-- ADMIN JAVASCRIPT -->
+
+    <script>
+
+        const API_URL =
+            "https://voicara-backend.onrender.com";
+
+
+        let adminKey = "";
+
+
+
+        // ===============================
+        // ADMIN LOGIN
+        // ===============================
+
+        function loginAdmin() {
+
+            const keyInput =
+                document.getElementById("adminKey");
+
+
+            const message =
+                document.getElementById("loginMessage");
+
+
+            adminKey =
+                keyInput.value.trim();
+
+
+            if (!adminKey) {
+
+                message.textContent =
+                    "Please enter the admin key.";
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "adminLogin"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "adminDashboard"
+            ).style.display = "block";
+
+
+            loadStories();
+
+        }
+
+
+
+        // ===============================
+        // LOAD STORIES
+        // ===============================
+
+        async function loadStories() {
+
+            const container =
+                document.getElementById(
+                    "storiesContainer"
+                );
+
+
+            container.innerHTML =
+                "<p>Loading stories...</p>";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/api/admin/stories`,
+                        {
+                            headers: {
+                                "x-admin-key":
+                                    adminKey
+                            }
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.message ||
+                        "Unable to load stories."
+                    );
+
+                }
+
+
+
+                // Update statistics
+
+                document.getElementById(
+                    "pendingCount"
+                ).textContent =
+                    result.counts.pending;
+
+
+                document.getElementById(
+                    "publishedCount"
+                ).textContent =
+                    result.counts.published;
+
+
+                document.getElementById(
+                    "rejectedCount"
+                ).textContent =
+                    result.counts.rejected;
+
+
+
+                // No stories
+
+                if (
+                    result.stories.length === 0
+                ) {
+
+                    container.innerHTML = `
+
+                        <div class="admin-card">
+
+                            <h3>
+                                No stories found
+                            </h3>
+
+                            <p>
+                                There are currently
+                                no submitted stories.
+                            </p>
+
+                        </div>
+
+                    `;
+
+                    return;
+
+                }
+
+
+
+                // Clear container
+
+                container.innerHTML = "";
+
+
+
+                // Display stories
+
+                result.stories.forEach(
+                    story => {
+
+
+                        const card =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        card.className =
+                            "admin-story-card";
+
+
+
+                        const displayName =
+                            story.anonymous ||
+                            !story.name
+                                ? "ANONYMOUS"
+                                : story.name;
+
+
+
+                        const location =
+                            story.province ||
+                            "South Africa";
+
+
+
+                        card.innerHTML = `
+
+                            <div
+                                class="admin-story-header"
+                            >
+
+                                <div>
+
+                                    <span
+                                        class="story-tag"
+                                    >
+                                        ${displayName}
+                                    </span>
+
+
+                                    <h3>
+                                        ${location}
+                                    </h3>
+
+                                </div>
+
+
+                                <span
+                                    class="status-badge ${story.status}"
+                                >
+                                    ${story.status}
+                                </span>
+
+                            </div>
+
+
+
+                            <div
+                                class="admin-story-content"
+                            >
+
+                                <p>
+                                    ${story.story}
+                                </p>
+
+                            </div>
+
+
+
+                            ${
+                                story.video_url
+                                ?
+                                `
+                                <p>
+                                    <strong>
+                                        Video submitted
+                                    </strong>
+                                </p>
+                                `
+                                :
+                                ""
+                            }
+
+
+
+                            <div
+                                class="admin-actions"
+                            >
+
+
+                                ${
+                                    story.status !==
+                                    "published"
+
+                                    ?
+
+                                    `
+                                    <button
+                                        class="btn btn-primary"
+                                        onclick="updateStory(
+                                            '${story.id}',
+                                            'published'
+                                        )"
+                                    >
+                                        Publish
+                                    </button>
+                                    `
+
+                                    :
+
+                                    ""
+                                }
+
+
+
+                                ${
+                                    story.status !==
+                                    "rejected"
+
+                                    ?
+
+                                    `
+                                    <button
+                                        class="btn btn-danger"
+                                        onclick="updateStory(
+                                            '${story.id}',
+                                            'rejected'
+                                        )"
+                                    >
+                                        Reject
+                                    </button>
+                                    `
+
+                                    :
+
+                                    ""
+                                }
+
+
+                            </div>
+
+                        `;
+
+
+                        container.appendChild(
+                            card
+                        );
+
+                    }
+                );
+
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+
+                container.innerHTML = `
+
+                    <div class="admin-card">
+
+                        <h3>
+                            Unable to load stories
+                        </h3>
+
+                        <p>
+                            ${error.message}
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+
+        // ===============================
+        // UPDATE STORY STATUS
+        // ===============================
+
+        async function updateStory(
+            id,
+            status
+        ) {
+
+
+            const confirmation =
+                confirm(
+                    `Are you sure you want to ${status} this story?`
+                );
+
+
+            if (!confirmation) {
+
+                return;
+
+            }
+
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/api/admin/stories/${id}`,
+                        {
+
+                            method:
+                                "PATCH",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json",
+
+                                "x-admin-key":
+                                    adminKey
+
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    status:
+                                        status
+                                })
+
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.message ||
+                        "Unable to update story."
+                    );
+
+                }
+
+
+                alert(
+                    result.message
+                );
+
+
+                loadStories();
+
+            }
+
+
+            catch (error) {
+
+                console.error(error);
+
+
+                alert(
+                    error.message
+                );
+
+            }
+
+        }
+
+    </script>
+
+
+</body>
+
+</html>

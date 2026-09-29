@@ -2485,3 +2485,125 @@ footer {
     }
 }
 
+/* =========================
+   ADMIN DASHBOARD
+========================= */
+
+.admin-page {
+    padding: 80px 6%;
+    min-height: 80vh;
+}
+
+.admin-login {
+    max-width: 500px;
+    margin: 40px auto;
+}
+
+.admin-card {
+    padding: 30px;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.admin-card h2 {
+    margin-bottom: 10px;
+}
+
+.admin-card input {
+    width: 100%;
+    padding: 14px;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.admin-stat {
+    padding: 25px;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+}
+
+.admin-stat span {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.admin-stat strong {
+    font-size: 32px;
+}
+
+.admin-story-card {
+    background: #ffffff;
+    padding: 30px;
+    margin-bottom: 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+}
+
+.admin-story-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.admin-story-content {
+    line-height: 1.7;
+    margin-bottom: 20px;
+}
+
+.admin-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.status-badge {
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.status-badge.pending {
+    background: #fff3cd;
+}
+
+.status-badge.published {
+    background: #d1e7dd;
+}
+
+.status-badge.rejected {
+    background: #f8d7da;
+}
+
+.btn-danger {
+    background: #b42318;
+    color: white;
+    border: none;
+}
+
+.btn-secondary {
+    border: 1px solid #ccc;
+    background: white;
+}
