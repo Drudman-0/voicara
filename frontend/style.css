@@ -2485,3 +2485,51 @@ footer {
     }
 }
 
+/* =========================
+   STORY FILTERS
+========================= */
+
+.story-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 30px;
+}
+
+.filter-btn {
+    padding: 10px 18px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    background: white;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.filter-btn:hover {
+    transform: translateY(-1px);
+}
+
+.filter-btn.active {
+    background: #111;
+    color: white;
+    border-color: #111;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .story-filters {
+        gap: 8px;
+    }
+
+    .filter-btn {
+        padding: 9px 14px;
+        font-size: 13px;
+    }
+
+}

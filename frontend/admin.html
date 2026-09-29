@@ -216,15 +216,50 @@
 
 
 
-            <!-- STORIES -->
+            <!-- STORY FILTERS -->
 
-            <div id="storiesContainer">
+<div class="story-filters">
 
-                <p>
-                    Loading stories...
-                </p>
+    <button
+        class="filter-btn active"
+        onclick="filterStories('all', this)"
+    >
+        All
+    </button>
 
-            </div>
+    <button
+        class="filter-btn"
+        onclick="filterStories('pending', this)"
+    >
+        Pending
+    </button>
+
+    <button
+        class="filter-btn"
+        onclick="filterStories('published', this)"
+    >
+        Published
+    </button>
+
+    <button
+        class="filter-btn"
+        onclick="filterStories('rejected', this)"
+    >
+        Rejected
+    </button>
+
+</div>
+
+
+<!-- STORIES -->
+
+<div id="storiesContainer">
+
+    <p>
+        Loading stories...
+    </p>
+
+</div>
 
 
         </section>
@@ -255,6 +290,8 @@
 
 
         let adminKey = "";
+        let allStories = [];
+        let currentFilter = "all";
 
 
 
@@ -405,7 +442,17 @@
 
                 // Display stories
 
-                result.stories.forEach(
+                allStories = result.stories;
+
+            const filteredStories =
+                currentFilter === "all"
+                    ? allStories
+                        : allStories.filter(
+                            story =>
+                            story.status === currentFilter
+    );
+
+                filteredStories.forEach(
                     story => {
 
 
@@ -680,6 +727,67 @@
             }
 
         }
+
+        function filterStories(
+    filter,
+    button
+) {
+
+    currentFilter = filter;
+
+    document
+        .querySelectorAll(".filter-btn")
+        .forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+    button.classList.add("active");
+
+    const container =
+        document.getElementById(
+            "storiesContainer"
+        );
+
+    const filteredStories =
+        currentFilter === "all"
+            ? allStories
+            : allStories.filter(
+                story =>
+                    story.status ===
+                    currentFilter
+            );
+
+    if (filteredStories.length === 0) {
+
+        container.innerHTML = `
+            <div class="admin-card">
+                <h3>
+                    No ${filter} stories
+                </h3>
+
+                <p>
+                    There are currently no
+                    stories in this category.
+                </p>
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML = "";
+
+    filteredStories.forEach(
+        story => {
+
+            createStoryCard(
+                story,
+                container
+            );
+
+        }
+    );
+}
 
     </script>
 
