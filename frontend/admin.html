@@ -4,7 +4,6 @@
 
 <head>
 
-
 <meta charset="UTF-8">
 
 <meta
@@ -23,13 +22,15 @@
 
 <script src="https://unpkg.com/lucide@latest"></script>
 
-
 </head>
+
 
 <body>
 
 
+<!-- =============================== -->
 <!-- NAVIGATION -->
+<!-- =============================== -->
 
 <header class="navbar">
 
@@ -55,8 +56,9 @@
 </header>
 
 
-
+<!-- =============================== -->
 <!-- ADMIN PAGE -->
+<!-- =============================== -->
 
 <main class="admin-page">
 
@@ -84,7 +86,9 @@
 
 
 
+    <!-- =============================== -->
     <!-- ADMIN LOGIN -->
+    <!-- =============================== -->
 
     <section
         id="adminLogin"
@@ -127,7 +131,9 @@
 
 
 
+    <!-- =============================== -->
     <!-- ADMIN DASHBOARD -->
+    <!-- =============================== -->
 
     <section
         id="adminDashboard"
@@ -154,18 +160,38 @@
             </div>
 
 
-            <button
-                class="btn btn-secondary"
-                onclick="loadStories()"
+            <div
+                style="
+                    display:flex;
+                    gap:10px;
+                    flex-wrap:wrap;
+                "
             >
-                Refresh
-            </button>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="loadStories()"
+                >
+                    Refresh
+                </button>
+
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="logoutAdmin()"
+                >
+                    Logout
+                </button>
+
+            </div>
 
         </div>
 
 
 
+        <!-- =============================== -->
         <!-- STATISTICS -->
+        <!-- =============================== -->
 
         <div class="admin-stats">
 
@@ -218,7 +244,9 @@
 
 
 
+        <!-- =============================== -->
         <!-- STORY FILTERS -->
+        <!-- =============================== -->
 
         <div class="story-filters">
 
@@ -229,6 +257,7 @@
                 All
             </button>
 
+
             <button
                 class="filter-btn"
                 onclick="filterStories('pending', this)"
@@ -236,12 +265,14 @@
                 Pending
             </button>
 
+
             <button
                 class="filter-btn"
                 onclick="filterStories('published', this)"
             >
                 Published
             </button>
+
 
             <button
                 class="filter-btn"
@@ -253,7 +284,10 @@
         </div>
 
 
+
+        <!-- =============================== -->
         <!-- STORIES -->
+        <!-- =============================== -->
 
         <div id="storiesContainer">
 
@@ -271,7 +305,9 @@
 
 
 
+<!-- =============================== -->
 <!-- FOOTER -->
+<!-- =============================== -->
 
 <footer class="footer">
 
@@ -283,33 +319,164 @@
 
 
 
+<!-- =============================== -->
 <!-- ADMIN JAVASCRIPT -->
-
+<!-- =============================== -->
 
 <script>
+
 
 const API_URL =
     "https://voicara-backend.onrender.com";
 
 let adminKey = "";
+
 let allStories = [];
+
 let currentFilter = "all";
 
 
-// ===============================
-// ADMIN LOGIN
-// ===============================
 
-async function loginAdmin() {
+/* =================================
+   LOGOUT ADMIN
+================================= */
 
-    const keyInput =
+function logoutAdmin() {
+
+    adminKey = "";
+
+    allStories = [];
+
+    currentFilter = "all";
+
+
+    const adminLogin =
+        document.getElementById("adminLogin");
+
+    const adminDashboard =
+        document.getElementById("adminDashboard");
+
+    const adminKeyInput =
         document.getElementById("adminKey");
 
     const loginMessage =
         document.getElementById("loginMessage");
 
+    const storiesContainer =
+        document.getElementById("storiesContainer");
+
+
+    if (adminDashboard) {
+
+        adminDashboard.style.display =
+            "none";
+
+    }
+
+
+    if (adminLogin) {
+
+        adminLogin.style.display =
+            "block";
+
+    }
+
+
+    if (adminKeyInput) {
+
+        adminKeyInput.value =
+            "";
+
+    }
+
+
+    if (loginMessage) {
+
+        loginMessage.textContent =
+            "";
+
+    }
+
+
+    if (storiesContainer) {
+
+        storiesContainer.innerHTML =
+            "";
+
+    }
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+}
+
+
+
+/* =================================
+   SESSION EXPIRED
+================================= */
+
+function handleUnauthorized() {
+
+    adminKey = "";
+
+    allStories = [];
+
+    currentFilter = "all";
+
+
+    alert(
+        "Your admin session is no longer valid. Please log in again."
+    );
+
+
+    logoutAdmin();
+
+}
+
+
+
+/* =================================
+   ESCAPE HTML
+================================= */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+
+/* =================================
+   ADMIN LOGIN
+================================= */
+
+async function loginAdmin() {
+
+    const keyInput =
+        document.getElementById(
+            "adminKey"
+        );
+
+
+    const loginMessage =
+        document.getElementById(
+            "loginMessage"
+        );
+
+
     const key =
         keyInput.value.trim();
+
 
 
     if (!key) {
@@ -318,128 +485,18 @@ async function loginAdmin() {
             "Please enter your admin key.";
 
         return;
+
     }
+
 
 
     loginMessage.textContent =
         "Checking admin key...";
 
 
+
     adminKey = key;
 
-
-    try {
-
-        const response =
-            await fetch(
-                `${API_URL}/api/admin/stories`,
-                {
-                    method: "GET",
-
-                    headers: {
-                        "x-admin-key": adminKey
-                    }
-                }
-            );
-
-
-        const result =
-            await response.json();
-
-
-        if (response.status === 401) {
-
-            adminKey = "";
-
-            loginMessage.textContent =
-                "Incorrect admin key.";
-
-            return;
-        }
-
-
-        if (!response.ok) {
-
-            adminKey = "";
-
-            loginMessage.textContent =
-                result.message ||
-                "Unable to access the admin dashboard.";
-
-            return;
-        }
-
-
-        loginMessage.textContent = "";
-
-
-        document.getElementById(
-            "adminLogin"
-        ).style.display = "none";
-
-
-        document.getElementById(
-            "adminDashboard"
-        ).style.display = "block";
-
-
-        allStories =
-            result.stories || [];
-
-
-        document.getElementById(
-            "pendingCount"
-        ).textContent =
-            result.counts?.pending || 0;
-
-
-        document.getElementById(
-            "publishedCount"
-        ).textContent =
-            result.counts?.published || 0;
-
-
-        document.getElementById(
-            "rejectedCount"
-        ).textContent =
-            result.counts?.rejected || 0;
-
-
-        displayStories();
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Admin login error:",
-            error
-        );
-
-        adminKey = "";
-
-        loginMessage.textContent =
-            "Unable to connect to the server.";
-
-    }
-
-}
-
-
-// ===============================
-// LOAD STORIES
-// ===============================
-
-async function loadStories() {
-
-    const container =
-        document.getElementById(
-            "storiesContainer"
-        );
-
-
-    container.innerHTML =
-        "<p>Loading stories...</p>";
 
 
     try {
@@ -458,33 +515,61 @@ async function loadStories() {
             );
 
 
+
         const result =
             await response.json();
 
 
+
         if (response.status === 401) {
 
-            alert(
-                "Your admin session is no longer valid."
-            );
+            adminKey = "";
 
-            location.reload();
+            loginMessage.textContent =
+                "Incorrect admin key.";
 
             return;
+
         }
+
 
 
         if (!response.ok) {
 
-            throw new Error(
+            adminKey = "";
+
+            loginMessage.textContent =
                 result.message ||
-                "Unable to load stories."
-            );
+                "Unable to access the admin dashboard.";
+
+            return;
+
         }
+
+
+
+        loginMessage.textContent =
+            "";
+
+
+
+        document.getElementById(
+            "adminLogin"
+        ).style.display =
+            "none";
+
+
+
+        document.getElementById(
+            "adminDashboard"
+        ).style.display =
+            "block";
+
 
 
         allStories =
             result.stories || [];
+
 
 
         document.getElementById(
@@ -493,10 +578,12 @@ async function loadStories() {
             result.counts?.pending || 0;
 
 
+
         document.getElementById(
             "publishedCount"
         ).textContent =
             result.counts?.published || 0;
+
 
 
         document.getElementById(
@@ -505,13 +592,128 @@ async function loadStories() {
             result.counts?.rejected || 0;
 
 
+
         displayStories();
 
     }
 
+
+    catch (error) {
+
+        console.error(
+            "Admin login error:",
+            error
+        );
+
+
+        adminKey = "";
+
+
+        loginMessage.textContent =
+            "Unable to connect to the server.";
+
+    }
+
+}
+
+
+
+/* =================================
+   LOAD STORIES
+================================= */
+
+async function loadStories() {
+
+    const container =
+        document.getElementById(
+            "storiesContainer"
+        );
+
+
+
+    container.innerHTML =
+        "<p>Loading stories...</p>";
+
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/api/admin/stories`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "x-admin-key":
+                            adminKey
+                    }
+                }
+            );
+
+
+
+        const result =
+            await response.json();
+
+
+
+        if (response.status === 401) {
+
+            handleUnauthorized();
+
+            return;
+
+        }
+
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.message ||
+                "Unable to load stories."
+            );
+
+        }
+
+
+
+        allStories =
+            result.stories || [];
+
+
+
+        document.getElementById(
+            "pendingCount"
+        ).textContent =
+            result.counts?.pending || 0;
+
+
+
+        document.getElementById(
+            "publishedCount"
+        ).textContent =
+            result.counts?.published || 0;
+
+
+
+        document.getElementById(
+            "rejectedCount"
+        ).textContent =
+            result.counts?.rejected || 0;
+
+
+
+        displayStories();
+
+    }
+
+
     catch (error) {
 
         console.error(error);
+
 
 
         container.innerHTML = `
@@ -523,7 +725,7 @@ async function loadStories() {
                 </h3>
 
                 <p>
-                    ${error.message}
+                    ${escapeHTML(error.message)}
                 </p>
 
             </div>
@@ -535,9 +737,10 @@ async function loadStories() {
 }
 
 
-// ===============================
-// DISPLAY STORIES
-// ===============================
+
+/* =================================
+   DISPLAY STORIES
+================================= */
 
 function displayStories() {
 
@@ -545,6 +748,7 @@ function displayStories() {
         document.getElementById(
             "storiesContainer"
         );
+
 
 
     const filteredStories =
@@ -557,6 +761,7 @@ function displayStories() {
             );
 
 
+
     if (
         filteredStories.length === 0
     ) {
@@ -567,17 +772,19 @@ function displayStories() {
                 : `${currentFilter} stories`;
 
 
+
         container.innerHTML = `
 
             <div class="admin-card">
 
                 <h3>
-                    No ${label} found
+                    No ${escapeHTML(label)} found
                 </h3>
 
                 <p>
                     There are currently no
-                    ${label} in this category.
+                    ${escapeHTML(label)}
+                    in this category.
                 </p>
 
             </div>
@@ -585,10 +792,14 @@ function displayStories() {
         `;
 
         return;
+
     }
 
 
-    container.innerHTML = "";
+
+    container.innerHTML =
+        "";
+
 
 
     filteredStories.forEach(
@@ -603,16 +814,16 @@ function displayStories() {
     );
 
 
-    // IMPORTANT:
-    // Load the actual submitted videos
+
     loadAdminVideos();
 
 }
 
 
-// ===============================
-// LOAD ADMIN VIDEOS
-// ===============================
+
+/* =================================
+   LOAD ADMIN VIDEOS
+================================= */
 
 async function loadAdminVideos() {
 
@@ -622,10 +833,14 @@ async function loadAdminVideos() {
         );
 
 
-    for (const video of videos) {
+
+    for (
+        const video of videos
+    ) {
 
         const storyId =
             video.dataset.storyId;
+
 
 
         try {
@@ -644,8 +859,10 @@ async function loadAdminVideos() {
                 );
 
 
+
             const result =
                 await response.json();
+
 
 
             console.log(
@@ -653,6 +870,19 @@ async function loadAdminVideos() {
                 storyId,
                 result
             );
+
+
+
+            if (
+                response.status === 401
+            ) {
+
+                handleUnauthorized();
+
+                return;
+
+            }
+
 
 
             if (
@@ -664,10 +894,12 @@ async function loadAdminVideos() {
                 video.src =
                     result.videoUrl;
 
-                // Force browser to load the video
+
                 video.load();
 
             }
+
+
             else {
 
                 console.error(
@@ -678,6 +910,7 @@ async function loadAdminVideos() {
             }
 
         }
+
 
         catch (error) {
 
@@ -693,9 +926,10 @@ async function loadAdminVideos() {
 }
 
 
-// ===============================
-// CREATE STORY CARD
-// ===============================
+
+/* =================================
+   CREATE STORY CARD
+================================= */
 
 function createStoryCard(
     story,
@@ -708,28 +942,64 @@ function createStoryCard(
         );
 
 
+
     card.className =
         "admin-story-card";
 
+
+
+    /*
+       SAFELY ESCAPE USER CONTENT
+    */
 
     const displayName =
         story.anonymous ||
         !story.name
             ? "ANONYMOUS"
-            : story.name;
+            : escapeHTML(
+                story.name
+            );
+
 
 
     const location =
-        story.province ||
-        "South Africa";
+        escapeHTML(
+            story.province ||
+            "South Africa"
+        );
+
 
 
     const submittedDate =
-        story.created_at
-            ? new Date(
-                story.created_at
-            ).toLocaleString()
-            : "Date unavailable";
+        escapeHTML(
+            story.created_at
+                ? new Date(
+                    story.created_at
+                ).toLocaleString()
+                : "Date unavailable"
+        );
+
+
+
+    const storyText =
+        escapeHTML(
+            story.story || ""
+        );
+
+
+
+    const storyStatus =
+        escapeHTML(
+            story.status || "pending"
+        );
+
+
+
+    const storyId =
+        escapeHTML(
+            story.id
+        );
+
 
 
     card.innerHTML = `
@@ -742,53 +1012,70 @@ function createStoryCard(
                     ${displayName}
                 </span>
 
+
                 <h3>
                     ${location}
                 </h3>
 
+
                 <p class="story-date">
+
                     Submitted:
                     ${submittedDate}
+
                 </p>
 
             </div>
 
 
+
             <span
-                class="status-badge ${story.status}"
+                class="status-badge ${storyStatus}"
             >
-                ${story.status}
+                ${storyStatus}
             </span>
 
         </div>
 
 
+
         <div class="admin-story-content">
 
             <p>
-                ${story.story}
+                ${storyText}
             </p>
 
         </div>
 
 
+
         ${
             story.video_url
                 ? `
+
                     <div class="admin-video-section">
 
                         <p>
+
                             <strong>
                                 🎥 Video submitted
                             </strong>
+
                         </p>
 
+
                         <video
+
                             class="admin-story-video"
+
                             controls
+
                             preload="metadata"
+
                             playsinline
-                            data-story-id="${story.id}"
+
+                            data-story-id="${storyId}"
+
                             style="
                                 width:100%;
                                 max-width:700px;
@@ -797,53 +1084,79 @@ function createStoryCard(
                                 background:#000;
                             "
                         >
+
                             Your browser does not support video playback.
+
                         </video>
 
                     </div>
+
                 `
                 : ""
         }
 
 
+
         <div class="admin-actions">
 
+
             ${
-                story.status !== "published"
+                story.status !==
+                "published"
+
                     ? `
+
                         <button
+
                             class="btn btn-primary"
+
                             onclick="updateStory(
-                                '${story.id}',
+                                '${storyId}',
                                 'published'
                             )"
+
                         >
                             Publish
+
                         </button>
+
                     `
+
                     : ""
             }
+
 
 
             ${
-                story.status !== "rejected"
+                story.status !==
+                "rejected"
+
                     ? `
+
                         <button
+
                             class="btn btn-danger"
+
                             onclick="updateStory(
-                                '${story.id}',
+                                '${storyId}',
                                 'rejected'
                             )"
+
                         >
                             Reject
+
                         </button>
+
                     `
+
                     : ""
             }
+
 
         </div>
 
     `;
+
 
 
     container.appendChild(
@@ -853,9 +1166,10 @@ function createStoryCard(
 }
 
 
-// ===============================
-// FILTER STORIES
-// ===============================
+
+/* =================================
+   FILTER STORIES
+================================= */
 
 function filterStories(
     filter,
@@ -864,6 +1178,7 @@ function filterStories(
 
     currentFilter =
         filter;
+
 
 
     document
@@ -881,9 +1196,11 @@ function filterStories(
         );
 
 
+
     button.classList.add(
         "active"
     );
+
 
 
     displayStories();
@@ -891,9 +1208,10 @@ function filterStories(
 }
 
 
-// ===============================
-// UPDATE STORY STATUS
-// ===============================
+
+/* =================================
+   UPDATE STORY STATUS
+================================= */
 
 async function updateStory(
     id,
@@ -906,9 +1224,13 @@ async function updateStory(
         );
 
 
+
     if (!confirmation) {
+
         return;
+
     }
+
 
 
     try {
@@ -921,6 +1243,7 @@ async function updateStory(
                     method:
                         "PATCH",
 
+
                     headers: {
 
                         "Content-Type":
@@ -930,6 +1253,7 @@ async function updateStory(
                             adminKey
 
                     },
+
 
                     body:
                         JSON.stringify({
@@ -941,20 +1265,22 @@ async function updateStory(
             );
 
 
+
         const result =
             await response.json();
 
 
-        if (response.status === 401) {
 
-            alert(
-                "Your admin session is no longer valid."
-            );
+        if (
+            response.status === 401
+        ) {
 
-            location.reload();
+            handleUnauthorized();
 
             return;
+
         }
+
 
 
         if (!response.ok) {
@@ -967,18 +1293,24 @@ async function updateStory(
         }
 
 
+
         alert(
             result.message
         );
+
 
 
         loadStories();
 
     }
 
+
     catch (error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
+
 
         alert(
             error.message
@@ -988,7 +1320,9 @@ async function updateStory(
 
 }
 
+
 </script>
+
 
 </body>
 
