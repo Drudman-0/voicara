@@ -283,29 +283,52 @@
 
     <!-- ADMIN JAVASCRIPT -->
 
-    <script>
+    ```html
+<script>
 
-    const API_URL =
-        "https://voicara-backend.onrender.com";
+const API_URL =
+    "https://voicara-backend.onrender.com";
 
-    let adminKey = "";
-    let allStories = [];
-    let currentFilter = "all";
+let adminKey = "";
+let allStories = [];
+let currentFilter = "all";
 
 
-    // ===============================
-    // ADMIN LOGIN
-    // ===============================
+// ===============================
+// ADMIN LOGIN
+// ===============================
 
-    async function loadStories(showLoginResult = false) {
+async function loginAdmin() {
 
-    const container =
-        document.getElementById("storiesContainer");
+    const keyInput =
+        document.getElementById("adminKey");
 
-    if (!showLoginResult) {
-        container.innerHTML =
-            "<p>Loading stories...</p>";
+    const loginMessage =
+        document.getElementById("loginMessage");
+
+    const key =
+        keyInput.value.trim();
+
+
+    // Check that something was entered
+
+    if (!key) {
+
+        loginMessage.textContent =
+            "Please enter your admin key.";
+
+        return;
     }
+
+
+    loginMessage.textContent =
+        "Checking admin key...";
+
+
+    // Temporarily store the entered key
+
+    adminKey = key;
+
 
     try {
 
@@ -313,27 +336,161 @@
             await fetch(
                 `${API_URL}/api/admin/stories`,
                 {
+                    method: "GET",
+
                     headers: {
                         "x-admin-key": adminKey
                     }
                 }
             );
 
+
         const result =
             await response.json();
 
-        // WRONG ADMIN KEY
-        if (response.status === 401) {
 
-            document.getElementById(
-                "loginMessage"
-            ).textContent =
-                "Incorrect admin key.";
+        // Wrong key
+
+        if (response.status === 401) {
 
             adminKey = "";
 
+            loginMessage.textContent =
+                "Incorrect admin key.";
+
             return;
         }
+
+
+        // Other server error
+
+        if (!response.ok) {
+
+            adminKey = "";
+
+            loginMessage.textContent =
+                result.message ||
+                "Unable to access the admin dashboard.";
+
+            return;
+        }
+
+
+        // ===============================
+        // LOGIN SUCCESSFUL
+        // ===============================
+
+        loginMessage.textContent = "";
+
+
+        document.getElementById(
+            "adminLogin"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "adminDashboard"
+        ).style.display = "block";
+
+
+        // Save stories
+
+        allStories =
+            result.stories || [];
+
+
+        // Update statistics
+
+        document.getElementById(
+            "pendingCount"
+        ).textContent =
+            result.counts?.pending || 0;
+
+
+        document.getElementById(
+            "publishedCount"
+        ).textContent =
+            result.counts?.published || 0;
+
+
+        document.getElementById(
+            "rejectedCount"
+        ).textContent =
+            result.counts?.rejected || 0;
+
+
+        // Display stories
+
+        displayStories();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Admin login error:",
+            error
+        );
+
+        adminKey = "";
+
+        loginMessage.textContent =
+            "Unable to connect to the server.";
+
+    }
+
+}
+
+
+// ===============================
+// LOAD STORIES
+// ===============================
+
+async function loadStories() {
+
+    const container =
+        document.getElementById(
+            "storiesContainer"
+        );
+
+
+    container.innerHTML =
+        "<p>Loading stories...</p>";
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/api/admin/stories`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "x-admin-key":
+                            adminKey
+                    }
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        // Admin key has become invalid
+
+        if (response.status === 401) {
+
+            alert(
+                "Your admin session is no longer valid."
+            );
+
+            location.reload();
+
+            return;
+        }
+
 
         if (!response.ok) {
 
@@ -343,20 +500,9 @@
             );
         }
 
-        // LOGIN SUCCESSFUL
-        document.getElementById(
-            "adminLogin"
-        ).style.display = "none";
-
-        document.getElementById(
-            "adminDashboard"
-        ).style.display = "block";
-
-
-        // Save all stories
 
         allStories =
-            result.stories;
+            result.stories || [];
 
 
         // Update statistics
@@ -364,17 +510,19 @@
         document.getElementById(
             "pendingCount"
         ).textContent =
-            result.counts.pending;
+            result.counts?.pending || 0;
+
 
         document.getElementById(
             "publishedCount"
         ).textContent =
-            result.counts.published;
+            result.counts?.published || 0;
+
 
         document.getElementById(
             "rejectedCount"
         ).textContent =
-            result.counts.rejected;
+            result.counts?.rejected || 0;
 
 
         displayStories();
@@ -385,474 +533,375 @@
 
         console.error(error);
 
-        if (showLoginResult) {
 
-            document.getElementById(
-                "loginMessage"
-            ).textContent =
-                "Unable to connect to the server.";
+        container.innerHTML = `
 
-        } else {
+            <div class="admin-card">
 
-            container.innerHTML = `
-
-                <div class="admin-card">
-
-                    <h3>
-                        Unable to load stories
-                    </h3>
-
-                    <p>
-                        ${error.message}
-                    </p>
-
-                </div>
-
-            `;
-        }
-    }
-}
-
-    // ===============================
-    // LOAD STORIES
-    // ===============================
-
-    async function loadStories() {
-
-        const container =
-            document.getElementById(
-                "storiesContainer"
-            );
-
-        container.innerHTML =
-            "<p>Loading stories...</p>";
-
-        try {
-
-            const response =
-                await fetch(
-                    `${API_URL}/api/admin/stories`,
-                    {
-                        headers: {
-                            "x-admin-key":
-                                adminKey
-                        }
-                    }
-                );
-
-            const result =
-                await response.json();
-
-            if (!response.ok) {
-
-                throw new Error(
-                    result.message ||
-                    "Unable to load stories."
-                );
-            }
-
-
-            // Save all stories
-
-            allStories =
-                result.stories;
-
-
-            // Update statistics
-
-            document.getElementById(
-                "pendingCount"
-            ).textContent =
-                result.counts.pending;
-
-            document.getElementById(
-                "publishedCount"
-            ).textContent =
-                result.counts.published;
-
-            document.getElementById(
-                "rejectedCount"
-            ).textContent =
-                result.counts.rejected;
-
-
-            // Display current filter
-
-            displayStories();
-
-        }
-
-        catch (error) {
-
-            console.error(error);
-
-            container.innerHTML = `
-
-                <div class="admin-card">
-
-                    <h3>
-                        Unable to load stories
-                    </h3>
-
-                    <p>
-                        ${error.message}
-                    </p>
-
-                </div>
-
-            `;
-        }
-    }
-
-
-    // ===============================
-    // DISPLAY STORIES
-    // ===============================
-
-    function displayStories() {
-
-        const container =
-            document.getElementById(
-                "storiesContainer"
-            );
-
-        const filteredStories =
-            currentFilter === "all"
-                ? allStories
-                : allStories.filter(
-                    story =>
-                        story.status ===
-                        currentFilter
-                );
-
-
-        // No stories in selected category
-
-        if (
-            filteredStories.length === 0
-        ) {
-
-            const label =
-                currentFilter === "all"
-                    ? "stories"
-                    : `${currentFilter} stories`;
-
-            container.innerHTML = `
-
-                <div class="admin-card">
-
-                    <h3>
-                        No ${label} found
-                    </h3>
-
-                    <p>
-                        There are currently no
-                        ${label} in this category.
-                    </p>
-
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        // Clear container
-
-        container.innerHTML = "";
-
-
-        // Create each story card
-
-        filteredStories.forEach(
-            story => {
-
-                createStoryCard(
-                    story,
-                    container
-                );
-
-            }
-        );
-    }
-
-
-    // ===============================
-    // CREATE STORY CARD
-    // ===============================
-
-    function createStoryCard(
-        story,
-        container
-    ) {
-
-        const card =
-            document.createElement(
-                "div"
-            );
-
-        card.className =
-            "admin-story-card";
-
-
-        const displayName =
-            story.anonymous ||
-            !story.name
-                ? "ANONYMOUS"
-                : story.name;
-
-
-        const location =
-            story.province ||
-            "South Africa";
-
-
-        const submittedDate =
-            story.created_at
-                ? new Date(
-                    story.created_at
-                ).toLocaleString()
-                : "Date unavailable";
-
-
-        card.innerHTML = `
-
-            <div
-                class="admin-story-header"
-            >
-
-                <div>
-
-                    <span
-                        class="story-tag"
-                    >
-                        ${displayName}
-                    </span>
-
-                    <h3>
-                        ${location}
-                    </h3>
-
-                    <p
-                        class="story-date"
-                    >
-                        Submitted:
-                        ${submittedDate}
-                    </p>
-
-                </div>
-
-
-                <span
-                    class="status-badge ${story.status}"
-                >
-                    ${story.status}
-                </span>
-
-            </div>
-
-
-            <div
-                class="admin-story-content"
-            >
+                <h3>
+                    Unable to load stories
+                </h3>
 
                 <p>
-                    ${story.story}
+                    ${error.message}
                 </p>
-
-            </div>
-
-
-            ${
-                story.video_url
-                    ? `
-                        <p>
-                            <strong>
-                                Video submitted
-                            </strong>
-                        </p>
-                    `
-                    : ""
-            }
-
-
-            <div
-                class="admin-actions"
-            >
-
-                ${
-                    story.status !==
-                    "published"
-                        ? `
-                            <button
-                                class="btn btn-primary"
-                                onclick="updateStory(
-                                    '${story.id}',
-                                    'published'
-                                )"
-                            >
-                                Publish
-                            </button>
-                        `
-                        : ""
-                }
-
-
-                ${
-                    story.status !==
-                    "rejected"
-                        ? `
-                            <button
-                                class="btn btn-danger"
-                                onclick="updateStory(
-                                    '${story.id}',
-                                    'rejected'
-                                )"
-                            >
-                                Reject
-                            </button>
-                        `
-                        : ""
-                }
 
             </div>
 
         `;
 
+    }
 
-        container.appendChild(
-            card
+}
+
+
+// ===============================
+// DISPLAY STORIES
+// ===============================
+
+function displayStories() {
+
+    const container =
+        document.getElementById(
+            "storiesContainer"
         );
+
+
+    const filteredStories =
+        currentFilter === "all"
+            ? allStories
+            : allStories.filter(
+                story =>
+                    story.status ===
+                    currentFilter
+            );
+
+
+    if (
+        filteredStories.length === 0
+    ) {
+
+        const label =
+            currentFilter === "all"
+                ? "stories"
+                : `${currentFilter} stories`;
+
+
+        container.innerHTML = `
+
+            <div class="admin-card">
+
+                <h3>
+                    No ${label} found
+                </h3>
+
+                <p>
+                    There are currently no
+                    ${label} in this category.
+                </p>
+
+            </div>
+
+        `;
+
+        return;
     }
 
 
-    // ===============================
-    // FILTER STORIES
-    // ===============================
-
-    function filterStories(
-        filter,
-        button
-    ) {
-
-        currentFilter =
-            filter;
+    container.innerHTML = "";
 
 
-        // Remove active class
+    filteredStories.forEach(
+        story => {
 
-        document
-            .querySelectorAll(
-                ".filter-btn"
-            )
-            .forEach(
-                btn => {
-                    btn.classList.remove(
-                        "active"
-                    );
+            createStoryCard(
+                story,
+                container
+            );
+
+        }
+    );
+
+}
+
+
+// ===============================
+// CREATE STORY CARD
+// ===============================
+
+function createStoryCard(
+    story,
+    container
+) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "admin-story-card";
+
+
+    const displayName =
+        story.anonymous ||
+        !story.name
+            ? "ANONYMOUS"
+            : story.name;
+
+
+    const location =
+        story.province ||
+        "South Africa";
+
+
+    const submittedDate =
+        story.created_at
+            ? new Date(
+                story.created_at
+            ).toLocaleString()
+            : "Date unavailable";
+
+
+    card.innerHTML = `
+
+        <div class="admin-story-header">
+
+            <div>
+
+                <span class="story-tag">
+                    ${displayName}
+                </span>
+
+                <h3>
+                    ${location}
+                </h3>
+
+                <p class="story-date">
+                    Submitted:
+                    ${submittedDate}
+                </p>
+
+            </div>
+
+
+            <span
+                class="status-badge ${story.status}"
+            >
+                ${story.status}
+            </span>
+
+        </div>
+
+
+        <div class="admin-story-content">
+
+            <p>
+                ${story.story}
+            </p>
+
+        </div>
+
+
+        ${
+            story.video_url
+                ? `
+                    <p>
+                        <strong>
+                            Video submitted
+                        </strong>
+                    </p>
+                `
+                : ""
+        }
+
+
+        <div class="admin-actions">
+
+            ${
+                story.status !== "published"
+                    ? `
+                        <button
+                            class="btn btn-primary"
+                            onclick="updateStory(
+                                '${story.id}',
+                                'published'
+                            )"
+                        >
+                            Publish
+                        </button>
+                    `
+                    : ""
+            }
+
+
+            ${
+                story.status !== "rejected"
+                    ? `
+                        <button
+                            class="btn btn-danger"
+                            onclick="updateStory(
+                                '${story.id}',
+                                'rejected'
+                            )"
+                        >
+                            Reject
+                        </button>
+                    `
+                    : ""
+            }
+
+        </div>
+
+    `;
+
+
+    container.appendChild(
+        card
+    );
+
+}
+
+
+// ===============================
+// FILTER STORIES
+// ===============================
+
+function filterStories(
+    filter,
+    button
+) {
+
+    currentFilter =
+        filter;
+
+
+    document
+        .querySelectorAll(
+            ".filter-btn"
+        )
+        .forEach(
+            btn => {
+
+                btn.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+    button.classList.add(
+        "active"
+    );
+
+
+    displayStories();
+
+}
+
+
+// ===============================
+// UPDATE STORY STATUS
+// ===============================
+
+async function updateStory(
+    id,
+    status
+) {
+
+    const confirmation =
+        confirm(
+            `Are you sure you want to ${status} this story?`
+        );
+
+
+    if (!confirmation) {
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                `${API_URL}/api/admin/stories/${id}`,
+                {
+
+                    method:
+                        "PATCH",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "x-admin-key":
+                            adminKey
+
+                    },
+
+                    body:
+                        JSON.stringify({
+                            status:
+                                status
+                        })
+
                 }
             );
 
 
-        // Add active class
-
-        button.classList.add(
-            "active"
-        );
+        const result =
+            await response.json();
 
 
-        // Display filtered stories
+        if (response.status === 401) {
 
-        displayStories();
-    }
-
-
-    // ===============================
-    // UPDATE STORY STATUS
-    // ===============================
-
-    async function updateStory(
-        id,
-        status
-    ) {
-
-        const confirmation =
-            confirm(
-                `Are you sure you want to ${status} this story?`
+            alert(
+                "Your admin session is no longer valid."
             );
 
+            location.reload();
 
-        if (!confirmation) {
             return;
         }
 
 
-        try {
+        if (!response.ok) {
 
-            const response =
-                await fetch(
-                    `${API_URL}/api/admin/stories/${id}`,
-                    {
-
-                        method:
-                            "PATCH",
-
-                        headers: {
-
-                            "Content-Type":
-                                "application/json",
-
-                            "x-admin-key":
-                                adminKey
-
-                        },
-
-                        body:
-                            JSON.stringify({
-                                status:
-                                    status
-                            })
-
-                    }
-                );
-
-
-            const result =
-                await response.json();
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    result.message ||
-                    "Unable to update story."
-                );
-            }
-
-
-            alert(
-                result.message
+            throw new Error(
+                result.message ||
+                "Unable to update story."
             );
-
-
-            // Reload stories
-
-            loadStories();
 
         }
 
-        catch (error) {
 
-            console.error(error);
+        alert(
+            result.message
+        );
 
-            alert(
-                error.message
-            );
-        }
+
+        loadStories();
+
     }
 
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+            error.message
+        );
+
+    }
+
+}
+
 </script>
+```
+
 
 
 
