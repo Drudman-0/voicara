@@ -297,25 +297,53 @@
     // ADMIN LOGIN
     // ===============================
 
-    function loginAdmin() {
+    async function loadStories(showLoginResult = false) {
 
-        const keyInput =
-            document.getElementById("adminKey");
+    const container =
+        document.getElementById("storiesContainer");
 
-        const message =
-            document.getElementById("loginMessage");
+    if (!showLoginResult) {
+        container.innerHTML =
+            "<p>Loading stories...</p>";
+    }
 
-        adminKey =
-            keyInput.value.trim();
+    try {
 
-        if (!adminKey) {
+        const response =
+            await fetch(
+                `${API_URL}/api/admin/stories`,
+                {
+                    headers: {
+                        "x-admin-key": adminKey
+                    }
+                }
+            );
 
-            message.textContent =
-                "Please enter the admin key.";
+        const result =
+            await response.json();
+
+        // WRONG ADMIN KEY
+        if (response.status === 401) {
+
+            document.getElementById(
+                "loginMessage"
+            ).textContent =
+                "Incorrect admin key.";
+
+            adminKey = "";
 
             return;
         }
 
+        if (!response.ok) {
+
+            throw new Error(
+                result.message ||
+                "Unable to load stories."
+            );
+        }
+
+        // LOGIN SUCCESSFUL
         document.getElementById(
             "adminLogin"
         ).style.display = "none";
@@ -324,9 +352,66 @@
             "adminDashboard"
         ).style.display = "block";
 
-        loadStories();
+
+        // Save all stories
+
+        allStories =
+            result.stories;
+
+
+        // Update statistics
+
+        document.getElementById(
+            "pendingCount"
+        ).textContent =
+            result.counts.pending;
+
+        document.getElementById(
+            "publishedCount"
+        ).textContent =
+            result.counts.published;
+
+        document.getElementById(
+            "rejectedCount"
+        ).textContent =
+            result.counts.rejected;
+
+
+        displayStories();
+
     }
 
+    catch (error) {
+
+        console.error(error);
+
+        if (showLoginResult) {
+
+            document.getElementById(
+                "loginMessage"
+            ).textContent =
+                "Unable to connect to the server.";
+
+        } else {
+
+            container.innerHTML = `
+
+                <div class="admin-card">
+
+                    <h3>
+                        Unable to load stories
+                    </h3>
+
+                    <p>
+                        ${error.message}
+                    </p>
+
+                </div>
+
+            `;
+        }
+    }
+}
 
     // ===============================
     // LOAD STORIES
