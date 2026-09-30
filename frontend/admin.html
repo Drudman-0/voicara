@@ -1,289 +1,291 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8">
+```
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <title>VOICARA SA | Admin Dashboard</title>
+<title>VOICARA SA | Admin Dashboard</title>
 
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
-        rel="stylesheet"
-    >
+<link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+    rel="stylesheet"
+>
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+```
 
 </head>
 
-
 <body>
 
+```
+<!-- NAVIGATION -->
 
-    <!-- NAVIGATION -->
+<header class="navbar">
 
-    <header class="navbar">
+    <div class="nav-container">
 
-        <div class="nav-container">
-
-            <a
-                href="index.html"
-                class="logo"
-            >
-                VOICARA <span>SA</span>
-            </a>
-
-
-            <a
-                href="index.html"
-                class="btn btn-primary"
-            >
-                Back to Website
-            </a>
-
-        </div>
-
-    </header>
+        <a
+            href="index.html"
+            class="logo"
+        >
+            VOICARA <span>SA</span>
+        </a>
 
 
+        <a
+            href="index.html"
+            class="btn btn-primary"
+        >
+            Back to Website
+        </a>
 
-    <!-- ADMIN PAGE -->
+    </div>
 
-    <main class="admin-page">
-
-
-        <!-- PAGE INTRO -->
-
-        <section class="page-hero">
-
-            <span class="section-label">
-                ADMINISTRATION
-            </span>
+</header>
 
 
-            <h1>
-                Story Approval Dashboard
-            </h1>
+
+<!-- ADMIN PAGE -->
+
+<main class="admin-page">
+
+
+    <!-- PAGE INTRO -->
+
+    <section class="page-hero">
+
+        <span class="section-label">
+            ADMINISTRATION
+        </span>
+
+
+        <h1>
+            Story Approval Dashboard
+        </h1>
+
+
+        <p>
+            Review stories submitted to VOICARA SA
+            before they are published.
+        </p>
+
+    </section>
+
+
+
+    <!-- ADMIN LOGIN -->
+
+    <section
+        id="adminLogin"
+        class="admin-login"
+    >
+
+        <div class="admin-card">
+
+            <h2>
+                Admin Login
+            </h2>
 
 
             <p>
-                Review stories submitted to VOICARA SA
-                before they are published.
+                Enter your administrator key
+                to access the dashboard.
             </p>
 
-        </section>
+
+            <input
+                type="password"
+                id="adminKey"
+                placeholder="Enter admin key"
+            >
+
+
+            <button
+                class="btn btn-primary"
+                onclick="loginAdmin()"
+            >
+                Login
+            </button>
+
+
+            <p id="loginMessage"></p>
+
+        </div>
+
+    </section>
 
 
 
-        <!-- ADMIN LOGIN -->
+    <!-- ADMIN DASHBOARD -->
 
-        <section
-            id="adminLogin"
-            class="admin-login"
-        >
+    <section
+        id="adminDashboard"
+        class="admin-dashboard"
+        style="display: none;"
+    >
 
-            <div class="admin-card">
+
+        <!-- DASHBOARD HEADER -->
+
+        <div class="admin-header">
+
+            <div>
+
+                <span class="section-label">
+                    STORY MANAGEMENT
+                </span>
+
 
                 <h2>
-                    Admin Login
+                    Submitted Stories
                 </h2>
 
-
-                <p>
-                    Enter your administrator key
-                    to access the dashboard.
-                </p>
-
-
-                <input
-                    type="password"
-                    id="adminKey"
-                    placeholder="Enter admin key"
-                >
-
-
-                <button
-                    class="btn btn-primary"
-                    onclick="loginAdmin()"
-                >
-                    Login
-                </button>
-
-
-                <p id="loginMessage"></p>
-
             </div>
 
-        </section>
+
+            <button
+                class="btn btn-secondary"
+                onclick="loadStories()"
+            >
+                Refresh
+            </button>
+
+        </div>
 
 
 
-        <!-- ADMIN DASHBOARD -->
+        <!-- STATISTICS -->
 
-        <section
-            id="adminDashboard"
-            class="admin-dashboard"
-            style="display: none;"
-        >
+        <div class="admin-stats">
 
 
-            <!-- DASHBOARD HEADER -->
+            <div class="admin-stat">
 
-            <div class="admin-header">
-
-                <div>
-
-                    <span class="section-label">
-                        STORY MANAGEMENT
-                    </span>
+                <span>
+                    Pending
+                </span>
 
 
-                    <h2>
-                        Submitted Stories
-                    </h2>
-
-                </div>
-
-
-                <button
-                    class="btn btn-secondary"
-                    onclick="loadStories()"
-                >
-                    Refresh
-                </button>
+                <strong id="pendingCount">
+                    0
+                </strong>
 
             </div>
 
 
 
-            <!-- STATISTICS -->
+            <div class="admin-stat">
 
-            <div class="admin-stats">
-
-
-                <div class="admin-stat">
-
-                    <span>
-                        Pending
-                    </span>
+                <span>
+                    Published
+                </span>
 
 
-                    <strong id="pendingCount">
-                        0
-                    </strong>
-
-                </div>
-
-
-
-                <div class="admin-stat">
-
-                    <span>
-                        Published
-                    </span>
-
-
-                    <strong id="publishedCount">
-                        0
-                    </strong>
-
-                </div>
-
-
-
-                <div class="admin-stat">
-
-                    <span>
-                        Rejected
-                    </span>
-
-
-                    <strong id="rejectedCount">
-                        0
-                    </strong>
-
-                </div>
-
+                <strong id="publishedCount">
+                    0
+                </strong>
 
             </div>
 
 
 
-            <!-- STORY FILTERS -->
+            <div class="admin-stat">
 
-<div class="story-filters">
-
-    <button
-        class="filter-btn active"
-        onclick="filterStories('all', this)"
-    >
-        All
-    </button>
-
-    <button
-        class="filter-btn"
-        onclick="filterStories('pending', this)"
-    >
-        Pending
-    </button>
-
-    <button
-        class="filter-btn"
-        onclick="filterStories('published', this)"
-    >
-        Published
-    </button>
-
-    <button
-        class="filter-btn"
-        onclick="filterStories('rejected', this)"
-    >
-        Rejected
-    </button>
-
-</div>
+                <span>
+                    Rejected
+                </span>
 
 
-<!-- STORIES -->
+                <strong id="rejectedCount">
+                    0
+                </strong>
 
-<div id="storiesContainer">
+            </div>
+
+
+        </div>
+
+
+
+        <!-- STORY FILTERS -->
+
+        <div class="story-filters">
+
+            <button
+                class="filter-btn active"
+                onclick="filterStories('all', this)"
+            >
+                All
+            </button>
+
+            <button
+                class="filter-btn"
+                onclick="filterStories('pending', this)"
+            >
+                Pending
+            </button>
+
+            <button
+                class="filter-btn"
+                onclick="filterStories('published', this)"
+            >
+                Published
+            </button>
+
+            <button
+                class="filter-btn"
+                onclick="filterStories('rejected', this)"
+            >
+                Rejected
+            </button>
+
+        </div>
+
+
+        <!-- STORIES -->
+
+        <div id="storiesContainer">
+
+            <p>
+                Loading stories...
+            </p>
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
 
     <p>
-        Loading stories...
+        © 2026 VOICARA SA. All rights reserved.
     </p>
 
-</div>
-
-
-        </section>
-
-
-    </main>
+</footer>
 
 
 
-    <!-- FOOTER -->
+<!-- ADMIN JAVASCRIPT -->
+```
 
-    <footer class="footer">
-
-        <p>
-            © 2026 VOICARA SA. All rights reserved.
-        </p>
-
-    </footer>
-
-
-
-    <!-- ADMIN JAVASCRIPT -->
-
-    
 <script>
 
 const API_URL =
@@ -310,8 +312,6 @@ async function loginAdmin() {
         keyInput.value.trim();
 
 
-    // Check that something was entered
-
     if (!key) {
 
         loginMessage.textContent =
@@ -324,8 +324,6 @@ async function loginAdmin() {
     loginMessage.textContent =
         "Checking admin key...";
 
-
-    // Temporarily store the entered key
 
     adminKey = key;
 
@@ -349,8 +347,6 @@ async function loginAdmin() {
             await response.json();
 
 
-        // Wrong key
-
         if (response.status === 401) {
 
             adminKey = "";
@@ -361,8 +357,6 @@ async function loginAdmin() {
             return;
         }
 
-
-        // Other server error
 
         if (!response.ok) {
 
@@ -375,10 +369,6 @@ async function loginAdmin() {
             return;
         }
 
-
-        // ===============================
-        // LOGIN SUCCESSFUL
-        // ===============================
 
         loginMessage.textContent = "";
 
@@ -393,13 +383,9 @@ async function loginAdmin() {
         ).style.display = "block";
 
 
-        // Save stories
-
         allStories =
             result.stories || [];
 
-
-        // Update statistics
 
         document.getElementById(
             "pendingCount"
@@ -418,8 +404,6 @@ async function loginAdmin() {
         ).textContent =
             result.counts?.rejected || 0;
 
-
-        // Display stories
 
         displayStories();
 
@@ -478,8 +462,6 @@ async function loadStories() {
             await response.json();
 
 
-        // Admin key has become invalid
-
         if (response.status === 401) {
 
             alert(
@@ -504,8 +486,6 @@ async function loadStories() {
         allStories =
             result.stories || [];
 
-
-        // Update statistics
 
         document.getElementById(
             "pendingCount"
@@ -622,7 +602,13 @@ function displayStories() {
         }
     );
 
+
+    // IMPORTANT:
+    // Load the actual submitted videos
+    loadAdminVideos();
+
 }
+
 
 // ===============================
 // LOAD ADMIN VIDEOS
@@ -662,6 +648,13 @@ async function loadAdminVideos() {
                 await response.json();
 
 
+            console.log(
+                "Video response:",
+                storyId,
+                result
+            );
+
+
             if (
                 response.ok &&
                 result.success &&
@@ -670,6 +663,17 @@ async function loadAdminVideos() {
 
                 video.src =
                     result.videoUrl;
+
+                // Force browser to load the video
+                video.load();
+
+            }
+            else {
+
+                console.error(
+                    "Video URL was not returned:",
+                    result
+                );
 
             }
 
@@ -687,6 +691,7 @@ async function loadAdminVideos() {
     }
 
 }
+
 
 // ===============================
 // CREATE STORY CARD
@@ -768,30 +773,37 @@ function createStoryCard(
 
 
         ${
-    story.video_url
-        ? `
-            <div class="admin-video-section">
+            story.video_url
+                ? `
+                    <div class="admin-video-section">
 
-                <p>
-                    <strong>
-                        🎥 Video submitted
-                    </strong>
-                </p>
+                        <p>
+                            <strong>
+                                🎥 Video submitted
+                            </strong>
+                        </p>
 
-                <video
-                    class="admin-story-video"
-                    controls
-                    preload="metadata"
-                    data-story-id="${story.id}"
-                    style="width:100%; max-width:700px; margin-top:10px; border-radius:12px;"
-                >
-                    Your browser does not support video playback.
-                </video>
+                        <video
+                            class="admin-story-video"
+                            controls
+                            preload="metadata"
+                            playsinline
+                            data-story-id="${story.id}"
+                            style="
+                                width:100%;
+                                max-width:700px;
+                                margin-top:10px;
+                                border-radius:12px;
+                                background:#000;
+                            "
+                        >
+                            Your browser does not support video playback.
+                        </video>
 
-            </div>
-        `
-        : ""
-}
+                    </div>
+                `
+                : ""
+        }
 
 
         <div class="admin-actions">
@@ -977,10 +989,6 @@ async function updateStory(
 }
 
 </script>
-
-
-
-
 
 </body>
 
