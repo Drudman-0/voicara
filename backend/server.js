@@ -7,25 +7,25 @@ const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
 
 
-// ===============================
+// ==================================================
 // LOAD ENVIRONMENT VARIABLES
-// ===============================
+// ==================================================
 
 dotenv.config();
 
 
-// ===============================
+// ==================================================
 // CREATE APP
-// ===============================
+// ==================================================
 
 const app = express();
 
 const PORT = process.env.PORT || 5000;
 
 
-// ===============================
+// ==================================================
 // SUPABASE CONNECTION
-// ===============================
+// ==================================================
 
 const supabase = createClient(
     process.env.SUPABASE_URL,
@@ -33,22 +33,24 @@ const supabase = createClient(
 );
 
 
-// ===============================
+// ==================================================
 // MIDDLEWARE
-// ===============================
+// ==================================================
 
 app.use(cors());
 
 app.use(express.json());
 
-app.use(express.urlencoded({
-    extended: true
-}));
+app.use(
+    express.urlencoded({
+        extended: true
+    })
+);
 
 
-// ===============================
+// ==================================================
 // VIDEO UPLOAD SETTINGS
-// ===============================
+// ==================================================
 
 const upload = multer({
 
@@ -85,9 +87,9 @@ const upload = multer({
 });
 
 
-// ===============================
+// ==================================================
 // TEST ROUTE
-// ===============================
+// ==================================================
 
 app.get("/", (req, res) => {
 
@@ -102,9 +104,9 @@ app.get("/", (req, res) => {
 });
 
 
-// ===============================
+// ==================================================
 // SUBMIT A STORY
-// ===============================
+// ==================================================
 
 app.post(
     "/api/stories",
@@ -129,7 +131,9 @@ app.post(
                 video ? video.path : null;
 
 
-            // Check story
+            // ------------------------------------------
+            // CHECK STORY
+            // ------------------------------------------
 
             if (!story || story.trim() === "") {
 
@@ -137,16 +141,17 @@ app.post(
 
                     success: false,
 
-                    message: "Please provide your story."
+                    message:
+                        "Please provide your story."
 
                 });
 
             }
 
 
-            // ===============================
+            // ------------------------------------------
             // UPLOAD VIDEO
-            // ===============================
+            // ------------------------------------------
 
             let videoPath = null;
 
@@ -190,7 +195,11 @@ app.post(
 
                 if (uploadError) {
 
-                    console.error(uploadError);
+                    console.error(
+                        "Video upload error:",
+                        uploadError
+                    );
+
 
                     return res.status(500).json({
 
@@ -209,9 +218,9 @@ app.post(
             }
 
 
-            // ===============================
+            // ------------------------------------------
             // SAVE STORY
-            // ===============================
+            // ------------------------------------------
 
             const {
                 data,
@@ -240,7 +249,7 @@ app.post(
                             anonymous === "true",
 
                         // New stories stay hidden
-                        // until an admin approves them
+                        // until an admin publishes them
 
                         status:
                             "pending"
@@ -253,7 +262,11 @@ app.post(
 
             if (error) {
 
-                console.error(error);
+                console.error(
+                    "Story database error:",
+                    error
+                );
+
 
                 return res.status(500).json({
 
@@ -267,9 +280,9 @@ app.post(
             }
 
 
-            // ===============================
+            // ------------------------------------------
             // DELETE TEMP VIDEO
-            // ===============================
+            // ------------------------------------------
 
             if (
                 uploadedFilePath &&
@@ -283,9 +296,9 @@ app.post(
             }
 
 
-            // ===============================
+            // ------------------------------------------
             // SUCCESS
-            // ===============================
+            // ------------------------------------------
 
             res.status(201).json({
 
@@ -303,7 +316,10 @@ app.post(
 
         catch (error) {
 
-            console.error(error);
+            console.error(
+                "Story submission error:",
+                error
+            );
 
 
             if (
@@ -333,81 +349,179 @@ app.post(
 );
 
 
-// ===============================
+// ==================================================
 // PUBLIC STORIES
 // ONLY PUBLISHED STORIES
-// ===============================
+// ==================================================
 
-app.get("/api/stories", async (req, res) => {
+app.get(
+    "/api/stories",
+    async (req, res) => {
 
-    try {
+        try {
 
-        const {
-            data,
-            error
-        } = await supabase
+            // ------------------------------------------
+            // GET PUBLISHED STORIES
+            // ------------------------------------------
 
-            .from("stories")
+            const {
+                data,
+                error
+            } = await supabase
 
-            .select(
-                "id, name, province, story, video_url, anonymous, created_at"
-            )
+                .from("stories")
 
-            .eq(
-                "status",
-                "published"
-            )
+                .select(
+                    "id, name, province, story, video_url, anonymous, created_at"
+                )
 
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
+                .eq(
+                    "status",
+                    "published"
+                )
+
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
 
 
-        if (error) {
+            if (error) {
 
-            console.error(error);
+                console.error(
+                    "Error fetching published stories:",
+                    error
+                );
 
-            return res.status(500).json({
 
-                success: false,
+                return res.status(500).json({
 
-                message:
-                    "Unable to load stories."
+                    success: false,
+
+                    message:
+                        "Unable to load stories."
+
+                });
+
+            }
+
+
+            // ------------------------------------------
+            // CREATE SIGNED VIDEO URLS
+            // ------------------------------------------
+
+            const stories =
+                await Promise.all(
+
+                    data.map(
+                        async (story) => {
+
+                            let videoUrl = null;
+
+
+                            /*
+                             * If this story has a video,
+                             * create a secure temporary
+                             * URL that the browser can play.
+                             */
+
+                            if (story.video_url) {
+
+                                const {
+                                    data: signedUrlData,
+                                    error: signedUrlError
+                                } = await supabase
+
+                                    .storage
+
+                                    .from("story-videos")
+
+                                    .createSignedUrl(
+                                        story.video_url,
+                                        60 * 60
+                                    );
+
+
+                                if (signedUrlError) {
+
+                                    console.error(
+                                        "Unable to create story video URL:",
+                                        signedUrlError
+                                    );
+
+                                }
+
+                                else if (
+                                    signedUrlData
+                                ) {
+
+                                    videoUrl =
+                                        signedUrlData.signedUrl;
+
+                                }
+
+                            }
+
+
+                            return {
+
+                                ...story,
+
+                                /*
+                                 * Replace the Supabase
+                                 * storage path with the
+                                 * playable signed URL.
+                                 */
+
+                                video_url:
+                                    videoUrl
+
+                            };
+
+                        }
+                    )
+
+                );
+
+
+            // ------------------------------------------
+            // SEND STORIES TO WEBSITE
+            // ------------------------------------------
+
+            res.json({
+
+                success: true,
+
+                stories:
+                    stories
 
             });
 
         }
 
+        catch (error) {
 
-        res.json({
+            console.error(
+                "Public stories error:",
+                error
+            );
 
-            success: true,
 
-            stories: data
+            res.status(500).json({
 
-        });
+                success: false,
 
-    }
+                message:
+                    "Something went wrong while loading stories."
 
-    catch (error) {
+            });
 
-        console.error(error);
-
-        res.status(500).json({
-
-            success: false,
-
-            message:
-                "Something went wrong while loading stories."
-
-        });
+        }
 
     }
-
-});
+);
 
 
 // ==================================================
@@ -420,7 +534,9 @@ app.get(
 
         try {
 
-            // Check admin key
+            // ------------------------------------------
+            // CHECK ADMIN KEY
+            // ------------------------------------------
 
             const adminKey =
                 req.headers["x-admin-key"];
@@ -443,7 +559,9 @@ app.get(
             }
 
 
-            // Get all stories
+            // ------------------------------------------
+            // GET ALL STORIES
+            // ------------------------------------------
 
             const {
                 data,
@@ -464,7 +582,11 @@ app.get(
 
             if (error) {
 
-                console.error(error);
+                console.error(
+                    "Admin stories error:",
+                    error
+                );
+
 
                 return res.status(500).json({
 
@@ -478,7 +600,9 @@ app.get(
             }
 
 
-            // Count stories
+            // ------------------------------------------
+            // COUNT STORIES
+            // ------------------------------------------
 
             const counts = {
 
@@ -503,13 +627,19 @@ app.get(
             };
 
 
+            // ------------------------------------------
+            // SEND ADMIN DATA
+            // ------------------------------------------
+
             res.json({
 
                 success: true,
 
-                counts: counts,
+                counts:
+                    counts,
 
-                stories: data
+                stories:
+                    data
 
             });
 
@@ -517,7 +647,11 @@ app.get(
 
         catch (error) {
 
-            console.error(error);
+            console.error(
+                "Admin stories error:",
+                error
+            );
+
 
             res.status(500).json({
 
@@ -533,6 +667,7 @@ app.get(
     }
 );
 
+
 // ==================================================
 // ADMIN: VIEW STORY VIDEO
 // ==================================================
@@ -543,10 +678,13 @@ app.get(
 
         try {
 
-            // Check admin key
+            // ------------------------------------------
+            // CHECK ADMIN KEY
+            // ------------------------------------------
 
             const adminKey =
                 req.headers["x-admin-key"];
+
 
             if (
                 !adminKey ||
@@ -565,10 +703,14 @@ app.get(
             }
 
 
-            const { id } = req.params;
+            const {
+                id
+            } = req.params;
 
 
-            // Find the story
+            // ------------------------------------------
+            // FIND STORY
+            // ------------------------------------------
 
             const {
                 data,
@@ -577,16 +719,25 @@ app.get(
 
                 .from("stories")
 
-                .select("video_url")
+                .select(
+                    "video_url"
+                )
 
-                .eq("id", id)
+                .eq(
+                    "id",
+                    id
+                )
 
                 .single();
 
 
             if (error) {
 
-                console.error(error);
+                console.error(
+                    "Find story video error:",
+                    error
+                );
+
 
                 return res.status(500).json({
 
@@ -600,7 +751,10 @@ app.get(
             }
 
 
-            if (!data || !data.video_url) {
+            if (
+                !data ||
+                !data.video_url
+            ) {
 
                 return res.status(404).json({
 
@@ -614,7 +768,9 @@ app.get(
             }
 
 
-            // Create a temporary secure URL
+            // ------------------------------------------
+            // CREATE SECURE VIDEO URL
+            // ------------------------------------------
 
             const {
                 data: signedUrlData,
@@ -634,8 +790,10 @@ app.get(
             if (signedUrlError) {
 
                 console.error(
+                    "Signed video URL error:",
                     signedUrlError
                 );
+
 
                 return res.status(500).json({
 
@@ -648,6 +806,10 @@ app.get(
 
             }
 
+
+            // ------------------------------------------
+            // SEND VIDEO URL
+            // ------------------------------------------
 
             res.json({
 
@@ -662,7 +824,11 @@ app.get(
 
         catch (error) {
 
-            console.error(error);
+            console.error(
+                "Admin video error:",
+                error
+            );
+
 
             res.status(500).json({
 
@@ -678,6 +844,7 @@ app.get(
     }
 );
 
+
 // ==================================================
 // ADMIN: UPDATE STORY STATUS
 // ==================================================
@@ -688,7 +855,9 @@ app.patch(
 
         try {
 
-            // Check admin key
+            // ------------------------------------------
+            // CHECK ADMIN KEY
+            // ------------------------------------------
 
             const adminKey =
                 req.headers["x-admin-key"];
@@ -721,7 +890,9 @@ app.patch(
             } = req.body;
 
 
-            // Allowed statuses
+            // ------------------------------------------
+            // ALLOWED STATUSES
+            // ------------------------------------------
 
             const allowedStatuses = [
 
@@ -750,7 +921,9 @@ app.patch(
             }
 
 
-            // Update story
+            // ------------------------------------------
+            // UPDATE STORY
+            // ------------------------------------------
 
             const {
                 data,
@@ -776,7 +949,11 @@ app.patch(
 
             if (error) {
 
-                console.error(error);
+                console.error(
+                    "Update story error:",
+                    error
+                );
+
 
                 return res.status(500).json({
 
@@ -807,6 +984,10 @@ app.patch(
             }
 
 
+            // ------------------------------------------
+            // SUCCESS
+            // ------------------------------------------
+
             res.json({
 
                 success: true,
@@ -823,7 +1004,11 @@ app.patch(
 
         catch (error) {
 
-            console.error(error);
+            console.error(
+                "Update story error:",
+                error
+            );
+
 
             res.status(500).json({
 

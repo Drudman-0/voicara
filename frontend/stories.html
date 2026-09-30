@@ -1,245 +1,602 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Stories | VOICARA SA</title>
 
-    <link rel="stylesheet" href="style.css">
+    <meta
+        name="description"
+        content="Read and watch stories shared through VOICARA SA."
+    >
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
 
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        /* ================================
+           STORY VIDEO
+        ================================= */
+
+        .story-video {
+            width: 100%;
+            margin-bottom: 24px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .story-video video {
+            display: block;
+            width: 100%;
+            max-height: 560px;
+            background: #000;
+        }
+
+        .story-video video:focus {
+            outline: 3px solid rgba(128, 0, 32, 0.35);
+            outline-offset: 2px;
+        }
+
+
+        /* ================================
+           LOADING / ERROR
+        ================================= */
+
+        .stories-loading {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .stories-error {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .no-stories {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+
+        /* ================================
+           MOBILE
+        ================================= */
+
+        @media (max-width: 768px) {
+
+            .story-video {
+                border-radius: 14px;
+            }
+
+            .story-video video {
+                max-height: 400px;
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
 
-<header class="navbar">
 
-    <a href="index.html" class="logo">
-        <span class="logo-icon">V</span>
-        <span>VOICARA <strong>SA</strong></span>
-    </a>
+    <!-- =================================
+         NAVIGATION
+    ================================= -->
 
-    <nav class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="stories.html" class="active">Stories</a>
-        <a href="support.html">Get Support</a>
-        <a href="about.html">About Us</a>
-    </nav>
+    <header class="site-header">
 
-    <div class="nav-actions">
-        <a href="share-stories.html" class="btn btn-outline">
-            Share Your Story
-        </a>
-
-        <a href="donate.html" class="btn btn-primary">
-            Donate
-        </a>
-    </div>
-
-</header>
-
-
-<section class="page-hero">
-
-    <span class="section-label">REAL VOICES</span>
-
-    <h1>
-        Her story deserves<br>
-        <span>to be heard.</span>
-    </h1>
-
-    <p>
-        A collection of stories shared by women who have chosen
-        to speak about their experiences and help others know
-        they are not alone.
-    </p>
-
-</section>
-
-
-<section class="stories-section">
-
-    <div class="stories-intro">
-
-        <div>
-            <span class="section-label">WOMEN'S VOICES</span>
-            <h2>Stories of courage</h2>
-        </div>
-
-        <a href="share-stories.html" class="btn btn-primary">
-            Share Your Story
-            <i data-lucide="arrow-right"></i>
-        </a>
-
-    </div>
-
-    <div class="story-grid" id="storyGrid">
-
-        <p id="storiesLoading">Loading stories...</p>
-
-    </div>
-
-</section>
-
-<section class="quote-section">
-
-    <div>
-
-        <i data-lucide="quote"></i>
-
-        <h2>
-            "Your voice can become
-            someone else's courage."
-        </h2>
-
-    </div>
-
-</section>
-
-
-<footer>
-
-    <div class="footer-main">
-
-        <div class="footer-brand">
+        <nav class="navbar">
 
             <a href="index.html" class="logo">
-                <span class="logo-icon">V</span>
-                <span>VOICARA <strong>SA</strong></span>
+                VOICARA SA
             </a>
 
-            <p>
-                Supporting women across South Africa and standing
-                together against gender-based violence.
-            </p>
 
-        </div>
+            <button
+                class="mobile-menu-button"
+                id="mobileMenu"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
 
-        <div class="footer-links">
 
-            <div>
-                <h4>Explore</h4>
-                <a href="index.html">Home</a>
-                <a href="stories.html">Stories</a>
-                <a href="support.html">Get Support</a>
+            <div class="nav-links">
+
+                <a href="index.html">
+                    Home
+                </a>
+
+                <a
+                    href="stories.html"
+                    class="active"
+                >
+                    Stories
+                </a>
+
+                <a href="support.html">
+                    Get Support
+                </a>
+
+                <a href="about.html">
+                    About Us
+                </a>
+
+                <a
+                    href="share-stories.html"
+                    class="nav-button"
+                >
+                    Share Your Story
+                </a>
+
+                <a
+                    href="donate.html"
+                    class="nav-button donate-button"
+                >
+                    Donate
+                </a>
+
             </div>
 
-            <div>
-                <h4>Get Involved</h4>
-                <a href="share-stories.html">Share Your Story</a>
-                <a href="donate.html">Donate</a>
+        </nav>
+
+    </header>
+
+
+
+    <!-- =================================
+         MAIN CONTENT
+    ================================= -->
+
+    <main>
+
+
+        <!-- PAGE HERO -->
+
+        <section class="page-hero">
+
+            <div class="container">
+
+                <h1>
+                    Stories
+                </h1>
+
+                <p>
+                    Every voice matters. Every story has the power
+                    to create awareness, courage and change.
+                </p>
+
             </div>
 
-        </div>
+        </section>
 
-    </div>
 
-    <div class="footer-bottom">
-        <span>© 2026 VOICARA SA</span>
-        <span>Stand together. Speak up. Support her.</span>
-    </div>
 
-</footer>
+        <!-- STORIES SECTION -->
 
-<script src="main.js"></script>
+        <section class="stories-section">
 
-<script>
+            <div class="container">
 
-    const API_URL = "https://voicara-backend.onrender.com";
+                <div
+                    id="storiesContainer"
+                    class="stories-grid"
+                >
 
-    async function loadStories() {
-
-        const storyGrid = document.getElementById("storyGrid");
-
-        try {
-
-            const response = await fetch(`${API_URL}/api/stories`);
-
-            const result = await response.json();
-
-            if (!result.success) {
-                throw new Error(result.message);
-            }
-
-            if (result.stories.length === 0) {
-
-                storyGrid.innerHTML = `
-                    <div class="no-stories">
-                        <h3>No stories have been published yet.</h3>
-                        <p>Be the first to share your voice.</p>
-                    </div>
-                `;
-
-                return;
-            }
-
-            storyGrid.innerHTML = "";
-
-            result.stories.forEach(story => {
-
-                const article = document.createElement("article");
-
-                article.className = "story-card";
-
-                const displayName =
-                    story.anonymous || !story.name
-                        ? "ANONYMOUS"
-                        : story.name;
-
-                const location =
-                    story.province || "South Africa";
-
-                article.innerHTML = `
-
-                    <div class="story-info">
-
-                        <span class="story-tag">
-                            ${displayName}
-                        </span>
+                    <div class="stories-loading">
 
                         <p>
-                            ${story.story}
+                            Loading stories...
                         </p>
 
-                        <span class="story-location">
-                            ${location}
-                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =================================
+         FOOTER
+    ================================= -->
+
+    <footer class="site-footer">
+
+        <div class="container">
+
+            <div class="footer-content">
+
+
+                <div class="footer-brand">
+
+                    <h3>
+                        VOICARA SA
+                    </h3>
+
+                    <p>
+                        Her voice. Her power. Her future.
+                    </p>
+
+                </div>
+
+
+                <div class="footer-links">
+
+                    <a href="index.html">
+                        Home
+                    </a>
+
+                    <a href="stories.html">
+                        Stories
+                    </a>
+
+                    <a href="support.html">
+                        Get Support
+                    </a>
+
+                    <a href="about.html">
+                        About Us
+                    </a>
+
+                    <a href="share-stories.html">
+                        Share Your Story
+                    </a>
+
+                    <a href="donate.html">
+                        Donate
+                    </a>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="footer-bottom">
+
+                <p>
+                    © 2026 VOICARA SA. All rights reserved.
+                </p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- =================================
+         STORIES JAVASCRIPT
+    ================================= -->
+
+    <script>
+
+        const API_URL =
+            "https://voicara-backend.onrender.com";
+
+
+        /*
+         * Load all published stories
+         */
+
+        async function loadStories() {
+
+            const container =
+                document.getElementById("storiesContainer");
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_URL}/api/stories`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `Server returned ${response.status}`
+                    );
+
+                }
+
+
+                const result =
+                    await response.json();
+
+
+                if (
+                    !result.success ||
+                    !Array.isArray(result.stories)
+                ) {
+
+                    throw new Error(
+                        "Invalid stories response."
+                    );
+
+                }
+
+
+                /* Clear loading message */
+
+                container.innerHTML = "";
+
+
+                /* ================================
+                   NO STORIES
+                ================================= */
+
+                if (result.stories.length === 0) {
+
+                    container.innerHTML = `
+
+                        <div class="no-stories">
+
+                            <h3>
+                                No stories have been published yet.
+                            </h3>
+
+                            <p>
+                                Shared stories will appear here
+                                once they have been reviewed and published.
+                            </p>
+
+                        </div>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                /* ================================
+                   CREATE EACH STORY
+                ================================= */
+
+                result.stories.forEach((story) => {
+
+
+                    const article =
+                        document.createElement("article");
+
+
+                    article.className =
+                        "story-card";
+
+
+                    /* ================================
+                       VIDEO
+                    ================================= */
+
+                    if (story.video_url) {
+
+
+                        const videoContainer =
+                            document.createElement("div");
+
+
+                        videoContainer.className =
+                            "story-video";
+
+
+                        const video =
+                            document.createElement("video");
+
+
+                        video.controls = true;
+
+                        video.playsInline = true;
+
+                        video.preload = "metadata";
+
+
+                        /*
+                         * The backend now gives us
+                         * a secure signed Supabase URL.
+                         */
+
+                        video.src =
+                            story.video_url;
+
+
+                        /*
+                         * Browser fallback
+                         */
+
+                        const fallback =
+                            document.createElement("p");
+
+
+                        fallback.textContent =
+                            "Your browser does not support video playback.";
+
+
+                        video.appendChild(fallback);
+
+
+                        videoContainer.appendChild(video);
+
+
+                        /*
+                         * Add video to the top
+                         * of the story card.
+                         */
+
+                        article.appendChild(
+                            videoContainer
+                        );
+
+                    }
+
+
+                    /* ================================
+                       STORY INFORMATION
+                    ================================= */
+
+                    const storyInfo =
+                        document.createElement("div");
+
+
+                    storyInfo.className =
+                        "story-info";
+
+
+                    /* NAME */
+
+                    const nameTag =
+                        document.createElement("span");
+
+
+                    nameTag.className =
+                        "story-tag";
+
+
+                    if (story.anonymous) {
+
+                        nameTag.textContent =
+                            "Anonymous";
+
+                    } else {
+
+                        nameTag.textContent =
+                            story.name ||
+                            "Anonymous";
+
+                    }
+
+
+                    /* STORY TEXT */
+
+                    const storyText =
+                        document.createElement("p");
+
+
+                    storyText.textContent =
+                        story.story || "";
+
+
+                    /* LOCATION */
+
+                    const location =
+                        document.createElement("span");
+
+
+                    location.className =
+                        "story-location";
+
+
+                    location.textContent =
+                        story.province ||
+                        "South Africa";
+
+
+                    /* Add information */
+
+                    storyInfo.appendChild(
+                        nameTag
+                    );
+
+
+                    storyInfo.appendChild(
+                        storyText
+                    );
+
+
+                    storyInfo.appendChild(
+                        location
+                    );
+
+
+                    /* Add information to card */
+
+                    article.appendChild(
+                        storyInfo
+                    );
+
+
+                    /* Add complete card */
+
+                    container.appendChild(
+                        article
+                    );
+
+                });
+
+
+            } catch (error) {
+
+
+                console.error(
+                    "Error loading stories:",
+                    error
+                );
+
+
+                container.innerHTML = `
+
+                    <div class="stories-error">
+
+                        <h3>
+                            We could not load the stories.
+                        </h3>
+
+                        <p>
+                            Please try again later.
+                        </p>
 
                     </div>
 
                 `;
 
-                storyGrid.appendChild(article);
+            }
 
-            });
-
-            lucide.createIcons();
-
-        } catch (error) {
-
-            console.error("Error loading stories:", error);
-
-            storyGrid.innerHTML = `
-                <div class="no-stories">
-                    <h3>Stories are temporarily unavailable.</h3>
-                    <p>Please try again later.</p>
-                </div>
-            `;
         }
-    }
 
-    loadStories();
 
-    lucide.createIcons();
+        /* Start loading stories */
 
-</script>
+        loadStories();
+
+    </script>
+
+
+
+    <!-- Existing VOICARA JavaScript -->
+
+    <script src="main.js"></script>
+
 
 </body>
+
 </html>
