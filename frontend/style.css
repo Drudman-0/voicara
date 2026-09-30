@@ -794,6 +794,24 @@ footer {
     background: #1f1a1e;
 }
 
+.video-message {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(36, 28, 36, 0.85);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    opacity: 0;
+    transition: 0.3s ease;
+    pointer-events: none;
+}
+
+.story-video-wrapper:hover .video-message {
+    opacity: 1;
+}
 
 /* =========================================
    STORY INFORMATION
