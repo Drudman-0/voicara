@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Share Your Story | VOICARA SA</title>
 
-    <link rel="stylesheet" href="style.css">
+    <meta
+        name="description"
+        content="Share your story with VOICARA SA. Your voice matters."
+    >
 
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -20,123 +20,898 @@
         rel="stylesheet"
     >
 
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: #faf7f8;
+            color: #2d2529;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        nav {
+            background: white;
+            border-bottom: 1px solid #eee6e9;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 18px 25px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: "Playfair Display", serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: #7c2855;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            color: #493d43;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #8f3565;
+        }
+
+        .nav-button {
+            background: #8f3565;
+            color: white !important;
+            padding: 11px 18px;
+            border-radius: 25px;
+        }
+
+        .nav-button:hover {
+            background: #74284f;
+        }
+
+        .mobile-menu-button {
+            display: none;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            background: linear-gradient(
+                135deg,
+                #f5e8ef,
+                #fff
+            );
+
+            padding: 70px 25px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: "Playfair Display", serif;
+            font-size: clamp(38px, 6vw, 60px);
+            color: #70274d;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: auto;
+            font-size: 18px;
+            color: #63565d;
+        }
+
+        /* =========================
+           MAIN CONTENT
+        ========================= */
+
+        .page-container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 0 25px;
+        }
+
+        .intro-box {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid #eee3e8;
+            box-shadow: 0 8px 25px rgba(70, 40, 55, 0.06);
+        }
+
+        .intro-box h2 {
+            font-family: "Playfair Display", serif;
+            color: #70274d;
+            margin-bottom: 10px;
+        }
+
+        .intro-box p {
+            color: #665b61;
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .story-form {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            border: 1px solid #eee3e8;
+            box-shadow: 0 8px 25px rgba(70, 40, 55, 0.07);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #3e3339;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #d9cbd2;
+            border-radius: 10px;
+            font-family: "DM Sans", sans-serif;
+            font-size: 15px;
+            background: white;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #9b4775;
+            box-shadow: 0 0 0 3px rgba(155, 71, 117, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .optional {
+            color: #8a7d84;
+            font-weight: 400;
+            font-size: 13px;
+        }
+
+        /* =========================
+           PRIVACY NOTICE
+        ========================= */
+
+        .privacy-notice {
+            background: #f7eef3;
+            border-left: 4px solid #8f3565;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            color: #594d54;
+        }
+
+        .privacy-notice strong {
+            color: #70274d;
+        }
+
+        /* =========================
+           ANONYMOUS CHECKBOX
+        ========================= */
+
+        .anonymous-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .anonymous-box input {
+            width: 18px;
+            height: 18px;
+            margin-top: 3px;
+            accent-color: #8f3565;
+        }
+
+        .anonymous-box label {
+            font-size: 14px;
+            color: #5e5359;
+        }
+
+        /* =========================
+           VIDEO SECTION
+        ========================= */
+
+        .video-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #eee3e8;
+        }
+
+        .video-section h3 {
+            font-family: "Playfair Display", serif;
+            color: #70274d;
+            font-size: 23px;
+            margin-bottom: 8px;
+        }
+
+        .video-section > p {
+            color: #70646b;
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .video-choice-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .video-choice-button {
+            border: 1px solid #d9cbd2;
+            background: #fff;
+            border-radius: 14px;
+            padding: 18px;
+            cursor: pointer;
+            font-family: "DM Sans", sans-serif;
+            transition: 0.2s;
+            text-align: left;
+        }
+
+        .video-choice-button:hover {
+            border-color: #8f3565;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 18px rgba(70, 40, 55, 0.08);
+        }
+
+        .video-choice-button .icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #f5e8ef;
+            color: #8f3565;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 12px;
+        }
+
+        .video-choice-button strong {
+            display: block;
+            color: #3d3339;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .video-choice-button span {
+            color: #766b71;
+            font-size: 13px;
+        }
+
+        #videoInput {
+            display: none;
+        }
+
+        /* =========================
+           SELECTED VIDEO CARD
+        ========================= */
+
+        .selected-video-card {
+            display: none;
+            margin-top: 18px;
+            padding: 15px 17px;
+            background: #f3faf5;
+            border: 1px solid #cce7d2;
+            border-radius: 12px;
+        }
+
+        .selected-video-card.show {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .selected-video-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+
+        .selected-video-info i {
+            color: #31804a;
+            flex-shrink: 0;
+        }
+
+        .selected-video-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #3d5142;
+            font-size: 14px;
+        }
+
+        .change-video-button {
+            border: none;
+            background: transparent;
+            color: #8f3565;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* =========================
+           SUBMIT BUTTON
+        ========================= */
+
+        .submit-button {
+            width: 100%;
+            border: none;
+            background: #8f3565;
+            color: white;
+            padding: 16px 20px;
+            border-radius: 30px;
+            font-family: "DM Sans", sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: 0.2s;
+        }
+
+        .submit-button:hover {
+            background: #74284f;
+            transform: translateY(-1px);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        #message {
+            display: none;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        #message.success {
+            display: block;
+            background: #eaf7ee;
+            color: #27663a;
+            border: 1px solid #c8e6d0;
+        }
+
+        #message.error {
+            display: block;
+            background: #fff0f0;
+            color: #9b3030;
+            border: 1px solid #f0caca;
+        }
+
+        /* =========================
+           VIDEO MODAL
+        ========================= */
+
+        .video-modal-overlay {
+            position: fixed;
+            inset: 0;
+
+            background: rgba(25, 18, 22, 0.72);
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 9999;
+
+            backdrop-filter: blur(5px);
+        }
+
+        .video-modal-overlay.show {
+            display: flex;
+        }
+
+        .video-modal {
+            width: 100%;
+            max-width: 650px;
+            max-height: 92vh;
+
+            overflow-y: auto;
+
+            background: white;
+            border-radius: 20px;
+
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+
+            animation: modalAppear 0.2s ease;
+        }
+
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .video-modal-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #eee4e8;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .video-modal-header h3 {
+            font-family: "Playfair Display", serif;
+            color: #70274d;
+            font-size: 23px;
+        }
+
+        .modal-close {
+            width: 38px;
+            height: 38px;
+
+            border: none;
+            border-radius: 50%;
+
+            background: #f5eef2;
+            color: #5f5159;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            background: #eadde4;
+        }
+
+        .video-modal-body {
+            padding: 22px;
+        }
+
+        .camera-status {
+            background: #f7eef3;
+            color: #6d5261;
+            border-radius: 10px;
+            padding: 11px 13px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .modal-video-wrapper {
+            width: 100%;
+            background: #151215;
+            border-radius: 14px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-video-wrapper video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .modal-video-placeholder {
+            color: #d7cbd1;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .modal-video-placeholder i {
+            width: 42px;
+            height: 42px;
+            margin-bottom: 8px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .modal-button {
+            flex: 1;
+            padding: 13px 18px;
+            border-radius: 25px;
+
+            font-family: "DM Sans", sans-serif;
+            font-weight: 700;
+
+            cursor: pointer;
+            border: none;
+        }
+
+        .modal-button.secondary {
+            background: #f3edf1;
+            color: #614f5a;
+        }
+
+        .modal-button.secondary:hover {
+            background: #e9dfe5;
+        }
+
+        .modal-button.primary {
+            background: #8f3565;
+            color: white;
+        }
+
+        .modal-button.primary:hover {
+            background: #74284f;
+        }
+
+        .record-controls {
+            display: none;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .record-controls.show {
+            display: flex;
+        }
+
+        .record-button {
+            flex: 1;
+            padding: 13px 18px;
+            border-radius: 25px;
+            border: none;
+            font-family: "DM Sans", sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .start-recording {
+            background: #8f3565;
+            color: white;
+        }
+
+        .stop-recording {
+            background: #f0e5e9;
+            color: #613f4e;
+        }
+
+        .recording-indicator {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            margin-top: 12px;
+
+            color: #9a3d5e;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .recording-indicator.show {
+            display: flex;
+        }
+
+        .recording-dot {
+            width: 10px;
+            height: 10px;
+            background: #c43e5e;
+            border-radius: 50%;
+            animation: recordingPulse 1s infinite;
+        }
+
+        @keyframes recordingPulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .modal-note {
+            margin-top: 13px;
+            text-align: center;
+            color: #81747b;
+            font-size: 12px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #30252b;
+            color: #ddd2d8;
+            padding: 40px 25px;
+            margin-top: 70px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: "Playfair Display", serif;
+            color: white;
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        .footer-container p {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            .nav-links {
+                display: none;
+
+                position: absolute;
+                top: 70px;
+                left: 0;
+                right: 0;
+
+                background: white;
+
+                flex-direction: column;
+                align-items: stretch;
+
+                padding: 20px 25px;
+
+                border-bottom: 1px solid #eee4e8;
+            }
+
+            .nav-links.mobile-open {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 10px 0;
+            }
+
+            .mobile-menu-button {
+                display: block;
+            }
+
+            .hero {
+                padding: 55px 20px;
+            }
+
+            .page-container {
+                margin: 30px auto;
+                padding: 0 15px;
+            }
+
+            .story-form {
+                padding: 22px;
+            }
+
+            .intro-box {
+                padding: 22px;
+            }
+
+            .video-choice-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-actions,
+            .record-controls {
+                flex-direction: column;
+            }
+
+            .video-modal {
+                max-height: 95vh;
+                border-radius: 16px;
+            }
+
+            .video-modal-body {
+                padding: 16px;
+            }
+
+            .video-modal-header {
+                padding: 16px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<header class="navbar">
+    <!-- =========================
+         NAVIGATION
+    ========================= -->
 
-    <a href="index.html" class="logo">
+    <nav>
+        <div class="nav-container">
 
-        <span class="logo-icon">V</span>
+            <a href="index.html" class="logo">
+                VOICARA SA
+            </a>
 
-        <span>
-            VOICARA <strong>SA</strong>
-        </span>
+            <button
+                class="mobile-menu-button"
+                id="mobileMenuButton"
+                aria-label="Open menu"
+            >
+                <i data-lucide="menu"></i>
+            </button>
 
-    </a>
+            <div class="nav-links" id="mobileMenu">
 
-    <nav class="nav-links">
+                <a href="index.html">
+                    Home
+                </a>
 
-        <a href="index.html">Home</a>
+                <a href="stories.html">
+                    Stories
+                </a>
 
-        <a href="stories.html">Stories</a>
+                <a href="support.html">
+                    Get Support
+                </a>
 
-        <a href="support.html">Get Support</a>
+                <a href="about.html">
+                    About Us
+                </a>
 
-        <a href="about.html">About Us</a>
+                <a
+                    href="share-stories.html"
+                    class="nav-button"
+                >
+                    Share Your Story
+                </a>
 
+                <a
+                    href="donate.html"
+                    class="nav-button"
+                >
+                    Donate
+                </a>
+
+            </div>
+
+        </div>
     </nav>
 
-    <div class="nav-actions">
 
-        <a
-            href="share-stories.html"
-            class="btn btn-outline"
-        >
+    <!-- =========================
+         HERO
+    ========================= -->
+
+    <section class="hero">
+
+        <h1>
             Share Your Story
-        </a>
+        </h1>
 
-        <a
-            href="donate.html"
-            class="btn btn-primary"
-        >
-            Donate
-        </a>
+        <p>
+            Your voice matters. Sharing your experience can help
+            create awareness, encourage others and build a stronger
+            community.
+        </p>
 
-    </div>
-
-</header>
+    </section>
 
 
-<!-- HERO -->
+    <!-- =========================
+         MAIN
+    ========================= -->
 
-<section class="page-hero">
+    <main class="page-container">
 
-    <span class="section-label">
-        YOUR VOICE MATTERS
-    </span>
-
-    <h1>
-        Share your<br>
-        <span>story.</span>
-    </h1>
-
-    <p>
-        If you feel ready to share your experience,
-        your story may help another woman realise
-        that she is not alone.
-    </p>
-
-</section>
-
-
-<!-- FORM -->
-
-<section class="form-section">
-
-    <div class="form-container">
-
-        <div class="form-header">
-
-            <i data-lucide="heart-handshake"></i>
+        <div class="intro-box">
 
             <h2>
-                Tell us your story
+                Your story. Your choice. Your voice.
             </h2>
 
             <p>
-                You decide how much information you want to share.
-                You can remain anonymous.
+                You can share your story in writing or include a video.
+                You can also choose to remain anonymous.
+                Every story is reviewed before it can appear publicly
+                on VOICARA SA.
             </p>
 
         </div>
 
 
-        <form id="storyForm">
+        <!-- =========================
+             FORM
+        ========================= -->
 
+        <form
+            id="storyForm"
+            class="story-form"
+        >
 
-            <!-- IDENTITY -->
+            <div class="privacy-notice">
 
-            <div class="form-group">
+                <strong>
+                    Your privacy matters.
+                </strong>
 
-                <label for="identity">
-                    How would you like to be identified?
-                </label>
-
-                <select id="identity">
-
-                    <option value="anonymous">
-                        Keep me anonymous
-                    </option>
-
-                    <option value="name">
-                        Use my first name
-                    </option>
-
-                </select>
+                Please only share information that you are comfortable
+                sharing. Avoid including private information such as
+                your home address, passwords or other sensitive details.
 
             </div>
 
@@ -146,13 +921,17 @@
             <div class="form-group">
 
                 <label for="name">
-                    First name <span>(optional)</span>
+                    Name
+                    <span class="optional">
+                        (optional)
+                    </span>
                 </label>
 
                 <input
                     type="text"
                     id="name"
-                    placeholder="Your first name"
+                    name="name"
+                    placeholder="Your name"
                 >
 
             </div>
@@ -163,13 +942,19 @@
             <div class="form-group">
 
                 <label for="province">
-                    Your province
+                    Province
+                    <span class="optional">
+                        (optional)
+                    </span>
                 </label>
 
-                <select id="province">
+                <select
+                    id="province"
+                    name="province"
+                >
 
                     <option value="">
-                        Select province
+                        Select your province
                     </option>
 
                     <option value="Eastern Cape">
@@ -196,12 +981,12 @@
                         Mpumalanga
                     </option>
 
-                    <option value="North West">
-                        North West
-                    </option>
-
                     <option value="Northern Cape">
                         Northern Cape
+                    </option>
+
+                    <option value="North West">
+                        North West
                     </option>
 
                     <option value="Western Cape">
@@ -218,349 +1003,1415 @@
             <div class="form-group">
 
                 <label for="story">
-                    Your story
+                    Your Story
                 </label>
 
                 <textarea
                     id="story"
-                    rows="8"
-                    placeholder="Share only what you feel comfortable sharing..."
+                    name="story"
+                    placeholder="Share your story in your own words..."
                     required
                 ></textarea>
 
             </div>
 
 
-            <!-- VIDEO -->
+            <!-- ANONYMOUS -->
 
-            <div class="upload-box">
+            <div class="anonymous-box">
 
-                <i data-lucide="video"></i>
+                <input
+                    type="checkbox"
+                    id="anonymous"
+                    name="anonymous"
+                >
+
+                <label for="anonymous">
+
+                    <strong>
+                        Submit anonymously
+                    </strong>
+
+                    <br>
+
+                    Your name will not be displayed publicly.
+
+                </label>
+
+            </div>
+
+
+            <!-- =========================
+                 VIDEO SECTION
+            ========================= -->
+
+            <div class="video-section">
 
                 <h3>
-                    Upload a video
+                    Add a Video
+                    <span class="optional">
+                        (optional)
+                    </span>
                 </h3>
 
                 <p>
-                    You can upload a video of your story.
-                    Every submission will be reviewed before
-                    being published.
+                    You can record a video now or choose a video
+                    already saved on your device.
                 </p>
 
-                <div class="form-group">
 
-                    <label for="video">
-                        Choose your video
-                    </label>
+                <div class="video-choice-buttons">
 
-                    <input
-                        type="file"
-                        id="video"
-                        name="video"
-                        accept="video/mp4,video/webm,video/quicktime"
+                    <!-- RECORD -->
+
+                    <button
+                        type="button"
+                        class="video-choice-button"
+                        id="recordVideoButton"
                     >
 
-                    <small>
-                        MP4, WebM or MOV • Maximum 50 MB
-            
-                    </small>
+                        <div class="icon">
+                            <i data-lucide="camera"></i>
+                        </div>
+
+                        <strong>
+                            Record a video
+                        </strong>
+
+                        <span>
+                            Use your camera to record your story.
+                        </span>
+
+                    </button>
+
+
+                    <!-- CHOOSE -->
+
+                    <button
+                        type="button"
+                        class="video-choice-button"
+                        id="chooseVideoButton"
+                    >
+
+                        <div class="icon">
+                            <i data-lucide="folder-open"></i>
+                        </div>
+
+                        <strong>
+                            Choose a video
+                        </strong>
+
+                        <span>
+                            Select a video from your device.
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+                <!-- Hidden file input -->
+
+                <input
+                    type="file"
+                    id="videoInput"
+                    name="video"
+                    accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov"
+                >
+
+
+                <!-- Selected video confirmation -->
+
+                <div
+                    class="selected-video-card"
+                    id="selectedVideoCard"
+                >
+
+                    <div class="selected-video-info">
+
+                        <i data-lucide="circle-check"></i>
+
+                        <span
+                            class="selected-video-name"
+                            id="selectedVideoName"
+                        >
+                            Video selected
+                        </span>
+
+                    </div>
+
+                    <button
+                        type="button"
+                        class="change-video-button"
+                        id="changeVideoButton"
+                    >
+                        Change
+                    </button>
 
                 </div>
 
             </div>
 
 
-            <!-- PRIVACY -->
-
-            <div class="privacy-box">
-
-                <i data-lucide="shield-check"></i>
-
-                <p>
-
-                    <strong>
-                        Your safety comes first.
-                    </strong>
-
-                    <br>
-
-                    Do not include your home address,
-                    phone number, workplace address or
-                    other information that could put you
-                    at risk.
-
-                </p>
-
-            </div>
-
-
-            <!-- REVIEW AGREEMENT -->
-
-            <label class="checkbox-label">
-
-                <input
-                    type="checkbox"
-                    id="reviewConsent"
-                    required
-                >
-
-                <span>
-                    I understand that my submission will be
-                    reviewed before it can appear publicly
-                    on the website.
-                </span>
-
-            </label>
-
-
             <!-- SUBMIT -->
 
             <button
                 type="submit"
-                class="btn btn-primary btn-large submit-button"
+                class="submit-button"
                 id="submitButton"
             >
-
-                Submit My Story
-
-                <i data-lucide="send"></i>
-
+                Submit Your Story
             </button>
 
 
-            <!-- STATUS -->
+            <!-- MESSAGE -->
 
-            <p
-                id="uploadStatus"
-                style="margin-top:20px;text-align:center;"
-            ></p>
-
+            <div id="message"></div>
 
         </form>
 
+    </main>
+
+
+    <!-- =========================
+         VIDEO MODAL
+    ========================= -->
+
+    <div
+        class="video-modal-overlay"
+        id="videoModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="videoModalTitle"
+    >
+
+        <div class="video-modal">
+
+            <!-- MODAL HEADER -->
+
+            <div class="video-modal-header">
+
+                <h3 id="videoModalTitle">
+                    Preview Your Video
+                </h3>
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    id="modalCloseButton"
+                    aria-label="Close video preview"
+                >
+                    <i data-lucide="x"></i>
+                </button>
+
+            </div>
+
+
+            <!-- MODAL BODY -->
+
+            <div class="video-modal-body">
+
+                <div
+                    class="camera-status"
+                    id="cameraStatus"
+                >
+                    Make sure you are happy with your video
+                    before choosing "Use this video".
+                </div>
+
+
+                <!-- VIDEO PREVIEW -->
+
+                <div class="modal-video-wrapper">
+
+                    <video
+                        id="modalVideo"
+                        controls
+                        playsinline
+                        muted
+                    ></video>
+
+                    <div
+                        class="modal-video-placeholder"
+                        id="modalVideoPlaceholder"
+                    >
+
+                        <i data-lucide="video"></i>
+
+                        <p>
+                            Your video preview will appear here.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RECORDING INDICATOR -->
+
+                <div
+                    class="recording-indicator"
+                    id="recordingIndicator"
+                >
+
+                    <span class="recording-dot"></span>
+
+                    Recording...
+
+                </div>
+
+
+                <!-- RECORD BUTTONS -->
+
+                <div
+                    class="record-controls"
+                    id="recordControls"
+                >
+
+                    <button
+                        type="button"
+                        class="record-button start-recording"
+                        id="startRecordingButton"
+                    >
+                        Start Recording
+                    </button>
+
+                    <button
+                        type="button"
+                        class="record-button stop-recording"
+                        id="stopRecordingButton"
+                        disabled
+                    >
+                        Stop Recording
+                    </button>
+
+                </div>
+
+
+                <!-- FINAL ACTIONS -->
+
+                <div
+                    class="modal-actions"
+                    id="finalVideoActions"
+                >
+
+                    <button
+                        type="button"
+                        class="modal-button secondary"
+                        id="retryVideoButton"
+                    >
+                        Choose Another
+                    </button>
+
+                    <button
+                        type="button"
+                        class="modal-button primary"
+                        id="useVideoButton"
+                    >
+                        Use This Video
+                    </button>
+
+                </div>
+
+
+                <p class="modal-note">
+                    Your video will only be submitted when you submit
+                    the complete story form.
+                </p>
+
+            </div>
+
+        </div>
+
     </div>
 
-</section>
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer>
+
+        <div class="footer-container">
+
+            <div class="footer-logo">
+                VOICARA SA
+            </div>
+
+            <p>
+                Her voice. Her power. Her future.
+            </p>
+
+            <p>
+                © 2026 VOICARA SA. All rights reserved.
+            </p>
+
+        </div>
+
+    </footer>
 
 
-<!-- FOOTER -->
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
 
-<footer>
+    <script>
 
-    <div class="footer-bottom">
+        /* =========================
+           CONFIGURATION
+        ========================= */
 
-        <span>
-            © 2026 VOICARA SA
-        </span>
-
-        <span>
-            Your voice matters.
-        </span>
-
-    </div>
-
-</footer>
+        const API_URL =
+            "https://voicara-backend.onrender.com";
 
 
-<script>
+        /* =========================
+           ELEMENTS
+        ========================= */
 
-    lucide.createIcons();
+        const storyForm =
+            document.getElementById("storyForm");
+
+        const videoInput =
+            document.getElementById("videoInput");
+
+        const recordVideoButton =
+            document.getElementById("recordVideoButton");
+
+        const chooseVideoButton =
+            document.getElementById("chooseVideoButton");
+
+        const changeVideoButton =
+            document.getElementById("changeVideoButton");
+
+        const selectedVideoCard =
+            document.getElementById("selectedVideoCard");
+
+        const selectedVideoName =
+            document.getElementById("selectedVideoName");
+
+        const videoModal =
+            document.getElementById("videoModal");
+
+        const modalVideo =
+            document.getElementById("modalVideo");
+
+        const modalVideoPlaceholder =
+            document.getElementById("modalVideoPlaceholder");
+
+        const modalCloseButton =
+            document.getElementById("modalCloseButton");
+
+        const cameraStatus =
+            document.getElementById("cameraStatus");
+
+        const recordControls =
+            document.getElementById("recordControls");
+
+        const startRecordingButton =
+            document.getElementById("startRecordingButton");
+
+        const stopRecordingButton =
+            document.getElementById("stopRecordingButton");
+
+        const recordingIndicator =
+            document.getElementById("recordingIndicator");
+
+        const finalVideoActions =
+            document.getElementById("finalVideoActions");
+
+        const retryVideoButton =
+            document.getElementById("retryVideoButton");
+
+        const useVideoButton =
+            document.getElementById("useVideoButton");
+
+        const submitButton =
+            document.getElementById("submitButton");
+
+        const message =
+            document.getElementById("message");
 
 
-    const storyForm =
-        document.getElementById("storyForm");
+        /* =========================
+           VIDEO VARIABLES
+        ========================= */
 
-    const submitButton =
-        document.getElementById("submitButton");
+        let selectedVideoFile = null;
 
-    const uploadStatus =
-        document.getElementById("uploadStatus");
+        let pendingVideoFile = null;
 
+        let cameraStream = null;
 
-    storyForm.addEventListener(
-        "submit",
-        async function(event) {
+        let mediaRecorder = null;
 
-            event.preventDefault();
+        let recordedChunks = [];
 
+        let recordingMode = false;
 
-            const name =
-                document.getElementById("name").value.trim();
-
-            const province =
-                document.getElementById("province").value;
-
-            const story =
-                document.getElementById("story").value.trim();
-
-            const identity =
-                document.getElementById("identity").value;
-
-            const reviewConsent =
-                document.getElementById("reviewConsent").checked;
-
-            const video =
-                document.getElementById("video").files[0];
+        let isRecording = false;
 
 
-            const anonymous =
-                identity === "anonymous";
+        /* =========================
+           INITIALISE ICONS
+        ========================= */
+
+        lucide.createIcons();
 
 
-            if (!story) {
+        /* =========================
+           MOBILE MENU
+        ========================= */
 
-                alert(
-                    "Please share your story before submitting."
+        const mobileMenuButton =
+            document.getElementById("mobileMenuButton");
+
+        const mobileMenu =
+            document.getElementById("mobileMenu");
+
+        mobileMenuButton.addEventListener(
+            "click",
+            () => {
+
+                mobileMenu.classList.toggle(
+                    "mobile-open"
                 );
 
-                return;
             }
+        );
 
 
-            if (!reviewConsent) {
+        /* =========================
+           OPEN FILE SELECTOR
+        ========================= */
 
-                alert(
-                    "Please confirm that you understand your submission will be reviewed."
-                );
+        chooseVideoButton.addEventListener(
+            "click",
+            () => {
 
-                return;
+                recordingMode = false;
+
+                videoInput.value = "";
+
+                videoInput.click();
+
             }
+        );
 
 
-            if (video) {
+        changeVideoButton.addEventListener(
+            "click",
+            () => {
+
+                recordingMode = false;
+
+                videoInput.value = "";
+
+                videoInput.click();
+
+            }
+        );
+
+
+        /* =========================
+           FILE SELECTED
+        ========================= */
+
+        videoInput.addEventListener(
+            "change",
+            () => {
+
+                const file =
+                    videoInput.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+                const validTypes = [
+                    "video/mp4",
+                    "video/webm",
+                    "video/quicktime"
+                ];
+
+                if (!validTypes.includes(file.type)) {
+
+                    showMessage(
+                        "Please choose an MP4, WebM or MOV video.",
+                        "error"
+                    );
+
+                    videoInput.value = "";
+
+                    return;
+                }
+
+
+                /* 100 MB limit */
 
                 const maxSize =
                     100 * 1024 * 1024;
 
-                if (video.size > maxSize) {
+                if (file.size > maxSize) {
 
-                    alert(
-                        "Your video is larger than 100 MB."
+                    showMessage(
+                        "Your video must be smaller than 100 MB.",
+                        "error"
                     );
+
+                    videoInput.value = "";
 
                     return;
                 }
 
 
-                const allowedTypes = [
+                pendingVideoFile = file;
 
-                    "video/mp4",
-
-                    "video/webm",
-
-                    "video/quicktime"
-
-                ];
-
-
-                if (!allowedTypes.includes(video.type)) {
-
-                    alert(
-                        "Please upload an MP4, WebM or MOV video."
-                    );
-
-                    return;
-                }
+                openFilePreview(file);
 
             }
+        );
 
 
-            submitButton.disabled = true;
+        /* =========================
+           OPEN FILE PREVIEW
+        ========================= */
 
-            uploadStatus.textContent =
-                "Submitting your story...";
+        function openFilePreview(file) {
 
+            recordingMode = false;
+
+            cameraStatus.textContent =
+                "Check your video before choosing \"Use This Video\".";
+
+            recordControls.classList.remove("show");
+
+            recordingIndicator.classList.remove("show");
+
+            finalVideoActions.style.display =
+                "flex";
+
+            modalVideoPlaceholder.style.display =
+                "none";
+
+            const videoURL =
+                URL.createObjectURL(file);
+
+            modalVideo.src =
+                videoURL;
+
+            modalVideo.muted = false;
+
+            modalVideo.controls = true;
+
+            modalVideo.load();
+
+            videoModal.classList.add("show");
+
+        }
+
+
+        /* =========================
+           RECORD VIDEO BUTTON
+        ========================= */
+
+        recordVideoButton.addEventListener(
+            "click",
+            async () => {
+
+                recordingMode = true;
+
+                pendingVideoFile = null;
+
+                videoInput.value = "";
+
+                openRecordingModal();
+
+                await startCamera();
+
+            }
+        );
+
+
+        /* =========================
+           OPEN RECORDING MODAL
+        ========================= */
+
+        function openRecordingModal() {
+
+            cameraStatus.textContent =
+                "Allow camera and microphone access when your browser asks.";
+
+            recordControls.classList.add("show");
+
+            finalVideoActions.style.display =
+                "none";
+
+            recordingIndicator.classList.remove("show");
+
+            startRecordingButton.disabled =
+                false;
+
+            stopRecordingButton.disabled =
+                true;
+
+            modalVideo.srcObject = null;
+
+            modalVideo.removeAttribute("src");
+
+            modalVideo.controls = false;
+
+            modalVideo.muted = true;
+
+            modalVideoPlaceholder.style.display =
+                "flex";
+
+            modalVideoPlaceholder.innerHTML = `
+                <i data-lucide="camera"></i>
+                <p>Your camera preview will appear here.</p>
+            `;
+
+            lucide.createIcons();
+
+            videoModal.classList.add("show");
+
+        }
+
+
+        /* =========================
+           START CAMERA
+        ========================= */
+
+        async function startCamera() {
 
             try {
 
-                const formData =
-                    new FormData();
+                cameraStream =
+                    await navigator.mediaDevices.getUserMedia({
+                        video: true,
+                        audio: true
+                    });
 
 
-                formData.append(
-                    "name",
-                    anonymous ? "" : name
+                modalVideoPlaceholder.style.display =
+                    "none";
+
+                modalVideo.srcObject =
+                    cameraStream;
+
+                modalVideo.muted = true;
+
+                modalVideo.controls = false;
+
+                await modalVideo.play();
+
+                cameraStatus.textContent =
+                    "Your camera is ready. Press Start Recording when you are ready.";
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Camera error:",
+                    error
                 );
 
+                cameraStatus.textContent =
+                    "Camera access was not available. You can choose a video from your device instead.";
 
-                formData.append(
-                    "province",
-                    province
+                recordControls.classList.remove(
+                    "show"
                 );
 
+                finalVideoActions.style.display =
+                    "flex";
 
-                formData.append(
-                    "story",
-                    story
-                );
-
-
-                formData.append(
-                    "anonymous",
-                    anonymous
-                );
-
-
-                if (video) {
-
-                    formData.append(
-                        "video",
-                        video
-                    );
-
-                }
-
-
-                const response =
-                    await fetch(
-                        "https://voicara-backend.onrender.com/api/stories",
-                        {
-                            method: "POST",
-                            body: formData
-                        }
-                    );
-
-
-                const result =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        result.message ||
-                        "Unable to submit story."
-                    );
-
-                }
-
-
-                uploadStatus.textContent =
-                    "Thank you. Your story has been safely submitted for review.";
-
-
-                storyForm.reset();
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                uploadStatus.textContent =
-                    "We could not submit your story. Please try again.";
-
-            } finally {
-
-                submitButton.disabled = false;
+                retryVideoButton.textContent =
+                    "Choose a Video";
 
             }
 
         }
 
-    );
 
-</script>
+        /* =========================
+           START RECORDING
+        ========================= */
+
+        startRecordingButton.addEventListener(
+            "click",
+            () => {
+
+                if (!cameraStream) {
+
+                    showMessage(
+                        "Camera is not available. Please choose a video instead.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                recordedChunks = [];
+
+
+                let options = {
+                    mimeType: "video/webm"
+                };
+
+
+                /* Check browser support */
+
+                if (
+                    !MediaRecorder.isTypeSupported(
+                        "video/webm"
+                    )
+                ) {
+
+                    options = {};
+
+                }
+
+
+                try {
+
+                    mediaRecorder =
+                        new MediaRecorder(
+                            cameraStream,
+                            options
+                        );
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "MediaRecorder error:",
+                        error
+                    );
+
+                    cameraStatus.textContent =
+                        "Your browser could not start video recording.";
+
+                    return;
+
+                }
+
+
+                mediaRecorder.ondataavailable =
+                    event => {
+
+                        if (
+                            event.data &&
+                            event.data.size > 0
+                        ) {
+
+                            recordedChunks.push(
+                                event.data
+                            );
+
+                        }
+
+                    };
+
+
+                mediaRecorder.onstop =
+                    () => {
+
+                        finishRecording();
+
+                    };
+
+
+                mediaRecorder.start();
+
+                isRecording = true;
+
+                startRecordingButton.disabled =
+                    true;
+
+                stopRecordingButton.disabled =
+                    false;
+
+                recordingIndicator.classList.add(
+                    "show"
+                );
+
+                cameraStatus.textContent =
+                    "You are recording. Press Stop Recording when you are finished.";
+
+            }
+        );
+
+
+        /* =========================
+           STOP RECORDING
+        ========================= */
+
+        stopRecordingButton.addEventListener(
+            "click",
+            () => {
+
+                if (
+                    mediaRecorder &&
+                    mediaRecorder.state !== "inactive"
+                ) {
+
+                    mediaRecorder.stop();
+
+                }
+
+                isRecording = false;
+
+                startRecordingButton.disabled =
+                    false;
+
+                stopRecordingButton.disabled =
+                    true;
+
+                recordingIndicator.classList.remove(
+                    "show"
+                );
+
+            }
+        );
+
+
+        /* =========================
+           FINISH RECORDING
+        ========================= */
+
+        function finishRecording() {
+
+            const blob =
+                new Blob(
+                    recordedChunks,
+                    {
+                        type: "video/webm"
+                    }
+                );
+
+
+            if (blob.size === 0) {
+
+                cameraStatus.textContent =
+                    "No video was recorded. Please try again.";
+
+                return;
+
+            }
+
+
+            const maxSize =
+                100 * 1024 * 1024;
+
+            if (blob.size > maxSize) {
+
+                cameraStatus.textContent =
+                    "The recorded video is larger than 100 MB. Please record a shorter video.";
+
+                return;
+
+            }
+
+
+            pendingVideoFile =
+                new File(
+                    [blob],
+                    `voicara-story-${Date.now()}.webm`,
+                    {
+                        type: "video/webm"
+                    }
+                );
+
+
+            stopCamera();
+
+
+            const videoURL =
+                URL.createObjectURL(
+                    pendingVideoFile
+                );
+
+
+            modalVideo.srcObject = null;
+
+            modalVideo.src =
+                videoURL;
+
+            modalVideo.controls = true;
+
+            modalVideo.muted = false;
+
+            modalVideo.load();
+
+
+            recordControls.classList.remove(
+                "show"
+            );
+
+            recordingIndicator.classList.remove(
+                "show"
+            );
+
+            finalVideoActions.style.display =
+                "flex";
+
+            cameraStatus.textContent =
+                "Your recording is ready. Watch it and choose \"Use This Video\" if you are happy with it.";
+
+        }
+
+
+        /* =========================
+           USE THIS VIDEO
+        ========================= */
+
+        useVideoButton.addEventListener(
+            "click",
+            () => {
+
+                if (!pendingVideoFile) {
+
+                    return;
+
+                }
+
+
+                selectedVideoFile =
+                    pendingVideoFile;
+
+
+                selectedVideoName.textContent =
+                    selectedVideoFile.name;
+
+
+                selectedVideoCard.classList.add(
+                    "show"
+                );
+
+
+                closeVideoModal();
+
+
+                showMessage(
+                    "Video selected successfully. You can now submit your story.",
+                    "success"
+                );
+
+            }
+        );
+
+
+        /* =========================
+           RETRY / CHOOSE ANOTHER
+        ========================= */
+
+        retryVideoButton.addEventListener(
+            "click",
+            () => {
+
+                stopCamera();
+
+                pendingVideoFile = null;
+
+                modalVideo.pause();
+
+                modalVideo.srcObject = null;
+
+                modalVideo.removeAttribute(
+                    "src"
+                );
+
+
+                if (recordingMode) {
+
+                    openRecordingModal();
+
+                    startCamera();
+
+                }
+                else {
+
+                    closeVideoModal();
+
+                    videoInput.value = "";
+
+                    videoInput.click();
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           CLOSE MODAL
+        ========================= */
+
+        modalCloseButton.addEventListener(
+            "click",
+            () => {
+
+                closeVideoModal();
+
+            }
+        );
+
+
+        /* =========================
+           CLICK OUTSIDE MODAL
+        ========================= */
+
+        videoModal.addEventListener(
+            "click",
+            event => {
+
+                if (
+                    event.target ===
+                    videoModal
+                ) {
+
+                    closeVideoModal();
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           CLOSE VIDEO MODAL
+        ========================= */
+
+        function closeVideoModal() {
+
+            stopCamera();
+
+            if (isRecording) {
+
+                isRecording = false;
+
+                if (
+                    mediaRecorder &&
+                    mediaRecorder.state !==
+                    "inactive"
+                ) {
+
+                    try {
+                        mediaRecorder.stop();
+                    }
+                    catch (error) {
+                        console.error(error);
+                    }
+
+                }
+
+            }
+
+
+            videoModal.classList.remove(
+                "show"
+            );
+
+            modalVideo.pause();
+
+            modalVideo.srcObject = null;
+
+            modalVideo.removeAttribute(
+                "src"
+            );
+
+            modalVideo.load();
+
+
+            recordControls.classList.remove(
+                "show"
+            );
+
+            recordingIndicator.classList.remove(
+                "show"
+            );
+
+            finalVideoActions.style.display =
+                "flex";
+
+
+            startRecordingButton.disabled =
+                false;
+
+            stopRecordingButton.disabled =
+                true;
+
+        }
+
+
+        /* =========================
+           STOP CAMERA
+        ========================= */
+
+        function stopCamera() {
+
+            if (cameraStream) {
+
+                cameraStream
+                    .getTracks()
+                    .forEach(
+                        track => {
+                            track.stop();
+                        }
+                    );
+
+                cameraStream = null;
+
+            }
+
+        }
+
+
+        /* =========================
+           SUBMIT STORY
+        ========================= */
+
+        storyForm.addEventListener(
+            "submit",
+            async event => {
+
+                event.preventDefault();
+
+
+                message.className = "";
+
+                message.style.display =
+                    "none";
+
+
+                submitButton.disabled =
+                    true;
+
+                submitButton.textContent =
+                    "Submitting...";
+
+
+                try {
+
+                    const name =
+                        document.getElementById(
+                            "name"
+                        ).value.trim();
+
+                    const province =
+                        document.getElementById(
+                            "province"
+                        ).value;
+
+                    const story =
+                        document.getElementById(
+                            "story"
+                        ).value.trim();
+
+                    const anonymous =
+                        document.getElementById(
+                            "anonymous"
+                        ).checked;
+
+
+                    if (!story) {
+
+                        throw new Error(
+                            "Please provide your story."
+                        );
+
+                    }
+
+
+                    const formData =
+                        new FormData();
+
+
+                    formData.append(
+                        "name",
+                        name
+                    );
+
+                    formData.append(
+                        "province",
+                        province
+                    );
+
+                    formData.append(
+                        "story",
+                        story
+                    );
+
+                    formData.append(
+                        "anonymous",
+                        anonymous
+                            ? "true"
+                            : "false"
+                    );
+
+
+                    /* Add video if selected */
+
+                    if (selectedVideoFile) {
+
+                        formData.append(
+                            "video",
+                            selectedVideoFile
+                        );
+
+                    }
+
+
+                    const response =
+                        await fetch(
+                            `${API_URL}/api/stories`,
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            result.message ||
+                            "Unable to submit your story."
+                        );
+
+                    }
+
+
+                    /* SUCCESS */
+
+                    showMessage(
+                        "Thank you for sharing your story. Your submission has been received and is now awaiting review.",
+                        "success"
+                    );
+
+
+                    /* Reset form */
+
+                    storyForm.reset();
+
+                    selectedVideoFile =
+                        null;
+
+                    pendingVideoFile =
+                        null;
+
+                    videoInput.value = "";
+
+                    selectedVideoCard.classList.remove(
+                        "show"
+                    );
+
+
+                    selectedVideoName.textContent =
+                        "Video selected";
+
+
+                    window.scrollTo({
+                        top: document.getElementById(
+                            "storyForm"
+                        ).offsetTop - 100,
+                        behavior: "smooth"
+                    });
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "Story submission error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "We could not submit your story. Please try again.",
+                        "error"
+                    );
+
+                }
+                finally {
+
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.textContent =
+                        "Submit Your Story";
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           SHOW MESSAGE
+        ========================= */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.textContent =
+                text;
+
+            message.className =
+                type;
+
+            message.style.display =
+                "block";
+
+        }
+
+
+        /* =========================
+           ESCAPE KEY
+        ========================= */
+
+        document.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Escape" &&
+                    videoModal.classList.contains(
+                        "show"
+                    )
+                ) {
+
+                    closeVideoModal();
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           CLEANUP
+        ========================= */
+
+        window.addEventListener(
+            "beforeunload",
+            () => {
+
+                stopCamera();
+
+            }
+        );
+
+    </script>
 
 </body>
-
 </html>
