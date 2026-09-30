@@ -787,11 +787,11 @@ footer {
 }
 
 .story-video {
-    display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    background: #211a20;
+    object-fit: contain;
+    display: block;
+    background: #1f1a1e;
 }
 
 
