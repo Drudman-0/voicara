@@ -2773,62 +2773,60 @@ border-color: #222222;
 }
 
 /* =========================
-MOBILE ADMIN DASHBOARD
+   MOBILE ADMIN DASHBOARD
 ========================= */
 
 @media (max-width: 768px) {
 
-```
-.admin-page {
-    padding: 45px 5%;
-}
+    .admin-page {
+        padding: 45px 5%;
+    }
 
-.admin-header {
-    align-items: flex-start;
-    flex-direction: column;
-}
+    .admin-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 
-.admin-header h2 {
-    font-size: 27px;
-}
+    .admin-header h2 {
+        font-size: 27px;
+    }
 
-.admin-stats {
-    grid-template-columns: 1fr;
-    gap: 12px;
-}
+    .admin-stats {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
 
-.admin-stat {
-    padding: 20px;
-}
+    .admin-stat {
+        padding: 20px;
+    }
 
-.admin-story-card {
-    padding: 22px;
-}
+    .admin-story-card {
+        padding: 22px;
+    }
 
-.admin-story-header {
-    flex-direction: column;
-    gap: 12px;
-}
+    .admin-story-header {
+        flex-direction: column;
+        gap: 12px;
+    }
 
-.status-badge {
-    align-self: flex-start;
-}
+    .status-badge {
+        align-self: flex-start;
+    }
 
-.admin-actions {
-    flex-direction: column;
-}
+    .admin-actions {
+        flex-direction: column;
+    }
 
-.admin-actions .btn {
-    width: 100%;
-}
+    .admin-actions .btn {
+        width: 100%;
+    }
 
-.story-filters {
-    gap: 8px;
-}
+    .story-filters {
+        gap: 8px;
+    }
 
-.filter-btn {
-    padding: 9px 14px;
-}
-```
+    .filter-btn {
+        padding: 9px 14px;
+    }
 
 }
