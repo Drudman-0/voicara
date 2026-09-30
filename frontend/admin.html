@@ -624,6 +624,69 @@ function displayStories() {
 
 }
 
+// ===============================
+// LOAD ADMIN VIDEOS
+// ===============================
+
+async function loadAdminVideos() {
+
+    const videos =
+        document.querySelectorAll(
+            ".admin-story-video"
+        );
+
+
+    for (const video of videos) {
+
+        const storyId =
+            video.dataset.storyId;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_URL}/api/admin/stories/${storyId}/video`,
+                    {
+                        method: "GET",
+
+                        headers: {
+                            "x-admin-key":
+                                adminKey
+                        }
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (
+                response.ok &&
+                result.success &&
+                result.videoUrl
+            ) {
+
+                video.src =
+                    result.videoUrl;
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Unable to load video:",
+                error
+            );
+
+        }
+
+    }
+
+}
 
 // ===============================
 // CREATE STORY CARD
@@ -705,16 +768,30 @@ function createStoryCard(
 
 
         ${
-            story.video_url
-                ? `
-                    <p>
-                        <strong>
-                            Video submitted
-                        </strong>
-                    </p>
-                `
-                : ""
-        }
+    story.video_url
+        ? `
+            <div class="admin-video-section">
+
+                <p>
+                    <strong>
+                        🎥 Video submitted
+                    </strong>
+                </p>
+
+                <video
+                    class="admin-story-video"
+                    controls
+                    preload="metadata"
+                    data-story-id="${story.id}"
+                    style="width:100%; max-width:700px; margin-top:10px; border-radius:12px;"
+                >
+                    Your browser does not support video playback.
+                </video>
+
+            </div>
+        `
+        : ""
+}
 
 
         <div class="admin-actions">

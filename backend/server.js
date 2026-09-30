@@ -533,6 +533,150 @@ app.get(
     }
 );
 
+// ==================================================
+// ADMIN: VIEW STORY VIDEO
+// ==================================================
+
+app.get(
+    "/api/admin/stories/:id/video",
+    async (req, res) => {
+
+        try {
+
+            // Check admin key
+
+            const adminKey =
+                req.headers["x-admin-key"];
+
+            if (
+                !adminKey ||
+                adminKey !== process.env.ADMIN_KEY
+            ) {
+
+                return res.status(401).json({
+
+                    success: false,
+
+                    message:
+                        "Unauthorized."
+
+                });
+
+            }
+
+
+            const { id } = req.params;
+
+
+            // Find the story
+
+            const {
+                data,
+                error
+            } = await supabase
+
+                .from("stories")
+
+                .select("video_url")
+
+                .eq("id", id)
+
+                .single();
+
+
+            if (error) {
+
+                console.error(error);
+
+                return res.status(500).json({
+
+                    success: false,
+
+                    message:
+                        "Unable to find the story."
+
+                });
+
+            }
+
+
+            if (!data || !data.video_url) {
+
+                return res.status(404).json({
+
+                    success: false,
+
+                    message:
+                        "No video was submitted with this story."
+
+                });
+
+            }
+
+
+            // Create a temporary secure URL
+
+            const {
+                data: signedUrlData,
+                error: signedUrlError
+            } = await supabase
+
+                .storage
+
+                .from("story-videos")
+
+                .createSignedUrl(
+                    data.video_url,
+                    60 * 60
+                );
+
+
+            if (signedUrlError) {
+
+                console.error(
+                    signedUrlError
+                );
+
+                return res.status(500).json({
+
+                    success: false,
+
+                    message:
+                        "Unable to create video access link."
+
+                });
+
+            }
+
+
+            res.json({
+
+                success: true,
+
+                videoUrl:
+                    signedUrlData.signedUrl
+
+            });
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            res.status(500).json({
+
+                success: false,
+
+                message:
+                    "Something went wrong while loading the video."
+
+            });
+
+        }
+
+    }
+);
 
 // ==================================================
 // ADMIN: UPDATE STORY STATUS
