@@ -5,6 +5,7 @@ const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
+const Parser = require("rss-parser");
 
 
 // ==================================================
@@ -22,6 +23,7 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 
+console.log("VOICARA DEBUG: server.js loaded");
 
 // ==================================================
 // SUPABASE CONNECTION
@@ -31,6 +33,184 @@ const supabase = createClient(
     process.env.SUPABASE_URL,
     process.env.SUPABASE_KEY
 );
+
+
+/* =========================================
+   VOICARA SA NATIONAL NEWSROOM CONFIG
+========================================= */
+
+const rssParser = new Parser({
+    timeout: 15000,
+    headers: {
+        "User-Agent": "VOICARA-SA-Newsroom/1.0"
+    }
+});
+
+// Approved news sources
+const APPROVED_NEWS_FEEDS = [
+    {
+        name: "SABC News",
+        url: "https://www.sabcnews.com/sabcnews/feed/"
+    },
+    {
+        name: "Department of Science, Technology and Innovation",
+        url: "https://www.dsti.gov.za/rss.xml"
+    },
+    {
+        name: "Statistics South Africa",
+        url: "https://www.statssa.gov.za/?feed=rss2"
+    }
+];
+
+let newsroomCache = [];
+let newsroomLastUpdated = 0;
+let newsroomRefreshPromise = null;
+
+const NEWS_CACHE_DURATION = 10 * 60 * 1000;
+
+
+function detectNewsCategory(text) {
+    const value = String(text || "").toLowerCase();
+
+    if (/gender-based violence|\bgbv\b|femicide|domestic violence/.test(value))
+        return "gender-based-violence";
+    if (/education|school|university|student|matric/.test(value))
+        return "education";
+    if (/health|hospital|clinic|disease|medical/.test(value))
+        return "health";
+    if (/sport|football|soccer|rugby|cricket|athlete/.test(value))
+        return "sport";
+    if (/technology|cybersecurity|artificial intelligence|\bai\b/.test(value))
+        return "technology";
+    if (/business|economy|economic|inflation|company|employment/.test(value))
+        return "business";
+    if (/court|police|crime|arrest|justice|prosecutor/.test(value))
+        return "crime";
+    if (/environment|climate|wildlife|pollution|conservation/.test(value))
+        return "environment";
+    if (/government|minister|president|parliament|election|politic/.test(value))
+        return "politics";
+
+    return "community";
+}
+
+function detectNewsProvince(text) {
+    const value = String(text || "").toLowerCase();
+
+    const provinces = [
+        ["eastern-cape", /\beastern cape\b/],
+        ["free-state", /\bfree state\b/],
+        ["gauteng", /\bgauteng\b|\bjohannesburg\b|\bpretoria\b|\btswane\b/],
+        ["kwazulu-natal", /\bkwazulu-natal\b|\bkwazulu natal\b|\bdurban\b/],
+        ["limpopo", /\blimpopo\b|\bpolokwane\b/],
+        ["mpumalanga", /\bmpumalanga\b|\bmbombela\b/],
+        ["northern-cape", /\bnorthern cape\b/],
+        ["north-west", /\bnorth west province\b|\bnorth-west province\b/],
+        ["western-cape", /\bwestern cape\b|\bcape town\b/]
+    ];
+
+    for (const [province, pattern] of provinces) {
+        if (pattern.test(value)) {
+            return province;
+        }
+    }
+
+    return "national";
+}
+
+
+async function refreshNewsroomCache() {
+    if (newsroomRefreshPromise) {
+        return newsroomRefreshPromise;
+    }
+
+    newsroomRefreshPromise = (async () => {
+        const feedResults = await Promise.allSettled(
+            APPROVED_NEWS_FEEDS.map(async (feed) => {
+                const parsed = await rssParser.parseURL(feed.url);
+
+                return (parsed.items || []).map((item) => {
+                    const title = String(item.title || "").trim();
+                    const url = String(item.link || "").trim();
+
+                    if (!title || !/^https?:\/\//i.test(url)) {
+                        return null;
+                    }
+
+                    const description = String(
+                        item.contentSnippet ||
+                        item.summary ||
+                        item.content ||
+                        ""
+                    )
+                        .replace(/<[^>]*>/g, " ")
+                        .replace(/\s+/g, " ")
+                        .trim()
+                        .slice(0, 500);
+
+                    const searchableText = `${title} ${description}`;
+                    const imageUrl = String(item.enclosure?.url || "");
+
+                    return {
+                        id: `${feed.name}:${url}`,
+                        title,
+                        description:
+                            description ||
+                            "Read the original publisher's report.",
+                        url,
+                        image: /^https?:\/\//i.test(imageUrl)
+                            ? imageUrl
+                            : "",
+                        source: feed.name,
+                        publishedAt: item.isoDate || item.pubDate || null,
+                        province: detectNewsProvince(searchableText),
+                        category: detectNewsCategory(searchableText)
+                    };
+                }).filter(Boolean);
+            })
+        );
+
+        const successfulFeeds = feedResults.filter(
+            (result) => result.status === "fulfilled"
+        );
+
+        const articles = successfulFeeds.flatMap(
+            (result) => result.value
+        );
+
+        if (successfulFeeds.length === 0) {
+            throw new Error("All approved news feeds failed.");
+        }
+
+        const uniqueArticles = Array.from(
+            new Map(
+                articles.map((article) => [article.url, article])
+            ).values()
+        );
+
+        uniqueArticles.sort((a, b) => {
+            const dateA = Date.parse(a.publishedAt || "") || 0;
+            const dateB = Date.parse(b.publishedAt || "") || 0;
+            return dateB - dateA;
+        });
+
+        newsroomCache = uniqueArticles.slice(0, 150);
+        newsroomLastUpdated = Date.now();
+
+        console.log(
+            `VOICARA SA newsroom refreshed: ${newsroomCache.length} articles; ` +
+            `${successfulFeeds.length}/${APPROVED_NEWS_FEEDS.length} feeds available.`
+        );
+
+        return newsroomCache;
+    })();
+
+    try {
+        return await newsroomRefreshPromise;
+    } finally {
+        newsroomRefreshPromise = null;
+    }
+}
 
 
 // ==================================================
@@ -1024,6 +1204,49 @@ app.patch(
     }
 );
 
+console.log("VOICARA DEBUG: registering /api/news");
+
+app.get("/api/news", async (req, res) => {
+    try {
+        const cacheIsStale =
+            Date.now() - newsroomLastUpdated >= NEWS_CACHE_DURATION;
+
+        if (cacheIsStale) {
+            await refreshNewsroomCache();
+        }
+
+        res.set("Cache-Control", "public, max-age=60");
+
+        res.json({
+            success: true,
+            count: newsroomCache.length,
+            updatedAt: newsroomLastUpdated
+                ? new Date(newsroomLastUpdated).toISOString()
+                : null,
+            articles: newsroomCache
+        });
+    } catch (error) {
+        console.error("Newsroom feed error:", error.message);
+
+        if (newsroomCache.length > 0) {
+            return res.json({
+                success: true,
+                stale: true,
+                count: newsroomCache.length,
+                updatedAt: new Date(
+                    newsroomLastUpdated
+                ).toISOString(),
+                articles: newsroomCache
+            });
+        }
+
+        res.status(503).json({
+            success: false,
+            message: "The newsroom feeds are temporarily unavailable.",
+            articles: []
+        });
+    }
+});
 
 // ==================================================
 // START SERVER

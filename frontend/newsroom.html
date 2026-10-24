@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="en-ZA">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>National Newsroom | VOICARA SA</title>
+
+  <meta name="description" content="Stay informed with South African national and provincial news, trusted reporting and official updates from VOICARA SA.">
+
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#fffaf7">
+
+  <link rel="canonical" href="https://voicara-gkom.onrender.com/newsroom.html">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="icon" href="favicon.ico">
+
+  <script src="newsroom.js" defer></script>
+</head>
+
+<body class="newsroom-page">
+
+  <header class="site-header">
+    <div class="container nav-container">
+
+      <a href="index.html" class="brand" aria-label="VOICARA SA home">
+        <span class="brand-name">VOICARA <span>SA</span></span>
+      </a>
+
+      <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="primaryNavigation">
+        ☰
+      </button>
+
+      <nav class="main-nav" id="primaryNavigation">
+        <a href="index.html">Home</a>
+        <a href="stories.html">Stories</a>
+        <a href="newsroom.html" class="active" aria-current="page">Newsroom</a>
+        <a href="support.html">Get Support</a>
+        <a href="about.html">About Us</a>
+        <a href="share-stories.html" class="nav-cta">Share Your Story</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <main>
+
+    <section class="newsroom-hero">
+      <div class="container newsroom-hero-content">
+
+        <span class="eyebrow">SOUTH AFRICA • NEWS & CURRENT AFFAIRS</span>
+
+        <h1>The VOICARA SA <span>National Newsroom</span></h1>
+
+        <p>
+          Stay informed. Understand what is happening.
+          Discover the stories shaping South Africa and its people.
+        </p>
+
+        <a href="#latest-news" class="newsroom-button">
+          Explore the latest news
+        </a>
+
+        <div class="newsroom-trust">
+          <span>National coverage</span>
+          <span>Provincial updates</span>
+          <span>Trusted sources</span>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="newsroom-section" id="latest-news">
+      <div class="container">
+
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">STAY INFORMED</span>
+            <h2>Latest News</h2>
+            <p>Explore current reporting and important public updates.</p>
+          </div>
+
+          <span class="newsroom-status" id="newsStatus" role="status">
+            Loading news...
+          </span>
+        </div>
+
+        <form class="news-search" id="newsSearchForm" role="search">
+          <label class="visually-hidden" for="newsSearch">
+            Search news
+          </label>
+
+          <input
+            type="search"
+            id="newsSearch"
+            name="q"
+            placeholder="Search news, topics or provinces..."
+            autocomplete="off">
+
+          <button type="submit">Search</button>
+        </form>
+
+        <div class="news-filters">
+          <label for="provinceFilter">Province</label>
+
+          <select id="provinceFilter" name="province">
+            <option value="all">All provinces</option>
+            <option value="national">National news</option>
+            <option value="eastern-cape">Eastern Cape</option>
+            <option value="free-state">Free State</option>
+            <option value="gauteng">Gauteng</option>
+            <option value="kwazulu-natal">KwaZulu-Natal</option>
+            <option value="limpopo">Limpopo</option>
+            <option value="mpumalanga">Mpumalanga</option>
+            <option value="northern-cape">Northern Cape</option>
+            <option value="north-west">North West</option>
+            <option value="western-cape">Western Cape</option>
+          </select>
+
+          <label for="categoryFilter">Category</label>
+
+          <select id="categoryFilter" name="category">
+            <option value="all">All categories</option>
+            <option value="politics">Politics & Government</option>
+            <option value="community">Community</option>
+            <option value="education">Education</option>
+            <option value="business">Business & Economy</option>
+            <option value="health">Health</option>
+            <option value="crime">Crime & Justice</option>
+            <option value="gender-based-violence">Gender-Based Violence</option>
+            <option value="environment">Environment</option>
+            <option value="technology">Technology</option>
+            <option value="sport">Sport</option>
+          </select>
+
+          <button type="button" id="resetNewsFilters" class="reset-filters">
+            Reset filters
+          </button>
+        </div>
+
+        <div class="news-grid" id="newsGrid" aria-live="polite">
+          <div class="news-empty">
+            <h3>Loading the newsroom</h3>
+            <p>Fetching available news from configured sources.</p>
+          </div>
+        </div>
+
+        <div class="news-pagination">
+          <button type="button" id="loadMoreNews" hidden>
+            Load more stories
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="newsroom-section newsroom-sources">
+      <div class="container">
+
+        <div class="section-heading">
+          <div>
+            <span class="eyebrow">RESPONSIBLE REPORTING</span>
+            <h2>News you can trace to its source</h2>
+            <p>
+              Our newsroom is designed to surface reporting from established
+              publishers and official organisations.
+            </p>
+          </div>
+        </div>
+
+        <div class="source-cards">
+
+          <article class="source-card">
+            <h3>Trusted publishers</h3>
+            <p>
+              Read reporting from established news organisations, with links
+              to the original articles.
+            </p>
+          </article>
+
+          <article class="source-card">
+            <h3>Official updates</h3>
+            <p>
+              Find public information from government departments and
+              recognised public institutions.
+            </p>
+          </article>
+
+          <article class="source-card">
+            <h3>South African communities</h3>
+            <p>
+              Explore national and provincial developments affecting
+              communities throughout South Africa.
+            </p>
+          </article>
+
+        </div>
+
+        <p class="newsroom-disclaimer">
+          Articles remain the responsibility of their original publishers.
+          Follow the source link to read the full report. Publication and
+          source verification depend on the newsroom's configured feeds.
+        </p>
+
+      </div>
+    </section>
+
+    <section class="newsroom-cta">
+      <div class="container">
+        <span class="eyebrow">YOUR VOICE MATTERS</span>
+        <h2>Have a story your community needs to hear?</h2>
+        <p>
+          VOICARA SA is committed to amplifying women's voices and helping
+          communities be heard.
+        </p>
+        <a href="share-stories.html" class="newsroom-button">
+          Share Your Story
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-content">
+
+      <a href="index.html" class="brand">
+        <span class="brand-name">VOICARA <span>SA</span></span>
+      </a>
+
+      <p>
+        Her voice. Her power. Her future.
+      </p>
+
+      <div class="footer-links">
+        <a href="about.html">About Us</a>
+        <a href="stories.html">Stories</a>
+        <a href="support.html">Get Support</a>
+        <a href="share-stories.html">Share Your Story</a>
+      </div>
+
+      <p class="footer-copyright">
+        &copy; <span id="currentYear">2026</span> VOICARA SA.
+        All rights reserved.
+      </p>
+
+    </div>
+  </footer>
+
+</body>
+</html>
