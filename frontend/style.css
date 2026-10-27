@@ -2831,10 +2831,11 @@ height: 16px;
   transition: color 0.2s ease;
 }
 
-.newsroom-page .main-nav a:hover,
-.newsroom-page .main-nav a.active {
+
+.newsroom-page .main-nav a:hover {
   color: var(--news-rose);
 }
+
 
 .newsroom-page .main-nav .nav-cta {
   background: var(--news-rose);
